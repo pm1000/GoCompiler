@@ -1,4 +1,4 @@
-# Compiler Construction in Summer 2020
+# Compiler Construction in Summer 2021
 
 ## This Project is NOT yet ready to be graded!
 
@@ -21,10 +21,10 @@ Particularly important: Write your own names here. Take possession of the projec
 
 ## Really? It belongs to us?
 
-Not entirely. It will be deleted at the end of Summer Semester 2020.
+Not entirely. It will be deleted at the end of Summer Semester 2021.
 
 As such, do not store anything important here, or rather -- make sure that you 
 have *other* copies of anything you will want after the end of Summer
-Semester 2020.
+Semester 2021.
 
 You have been warned.
