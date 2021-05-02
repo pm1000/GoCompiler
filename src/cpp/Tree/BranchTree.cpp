@@ -10,7 +10,8 @@ BranchTree::BranchTree(Tree *parent, std::string name) : Tree(parent) {
 }
 
 BranchTree::~BranchTree() {
-
+    for (int i = children.size() - 1; i >= 0; --i)
+        delete children[i];
 }
 
 std::string BranchTree::getName() {

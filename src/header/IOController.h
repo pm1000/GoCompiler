@@ -18,7 +18,6 @@ private:
     std::string outputDirectory;
 
     std::string readFile(std::string path);
-
     std::vector<std::string> printTreeRecursive(Tree* current);
 
 public:
@@ -26,7 +25,7 @@ public:
     virtual ~IOController();
 
     void start();
-    void writeFile(Tree* current, std::string fileName);
+    void writeFile(Tree* current, std::string fileName, std::string prefix);
 };
 
 
