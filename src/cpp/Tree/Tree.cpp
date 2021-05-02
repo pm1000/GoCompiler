@@ -2,9 +2,15 @@
 // Created by philipp on 02.05.21.
 //
 
-#include "../header/Tree.h"
+#include "../../header/Tree/Tree.h"
 
-Tree::Tree() {}
+Tree::Tree() {
+    this->parent = nullptr;
+}
+
+Tree::Tree(Tree* parent) {
+    this->parent = parent;
+}
 
 Tree::~Tree() {
 
