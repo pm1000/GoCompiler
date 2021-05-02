@@ -5,17 +5,20 @@
 #ifndef Y_RASTER_A_PARSER_H
 #define Y_RASTER_A_PARSER_H
 
+#include <stdexcept>
 
 #include "../Tree/Tree.h"
 #include "../Tree/BranchTree.h"
+#include "../../header/Tree/TokenTree.h"
 
 class Parser {
 private:
-    Tree* astRoot = new BranchTree(nullptr, "Root ->");
-    Tree* symbolTableRoot = new BranchTree(nullptr, "Root ->");
+    Tree* astRoot = new BranchTree(nullptr, "Root");
+    Tree* symbolTableRoot = new BranchTree(nullptr, "Root");
     std::string content;
     char currentChar;
     int pos;
+    Tree* currentBranch;
     char getNextChar();
     static bool isWS(char c) ;
     static bool isLetter(char c) ;

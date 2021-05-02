@@ -2,7 +2,6 @@
 // Created by philipp on 02.05.21.
 //
 
-#include <stdexcept>
 #include "../../header/Compiler/Parser.h"
 
 Parser::Parser(std::string content){
@@ -18,7 +17,9 @@ void Parser::parse() {
     //check for <PACKAGE_INCLUDE> (see docs/grammar.txt)
     std::string current = "";
     //check for <PACKAGE_INCLUDE>
+    this->currentBranch = this->astRoot;
     checkForStart();
+    this->currentBranch = this->astRoot;
     checkFunc();
 
 
@@ -64,6 +65,10 @@ bool Parser::isDigit(char c) {
 
 //check for <PACKAGE_INCLUDE>  : { <ws>* <package> <ws>+ <id> <ws>+ } (see docs/grammar.txt)
 bool Parser::checkForStart() {
+
+    this->currentBranch= new BranchTree(this->astRoot, "PACKAGE_INCLUDE");
+    this->astRoot->addChild(this->currentBranch);
+
     char c = getNextChar();
     std::string current = "";
 
@@ -79,6 +84,8 @@ bool Parser::checkForStart() {
 
         if (current != "package")
             throw std::invalid_argument("Expected keyword <package> but found: " + current);
+        Tree* tokenPackage = new TokenTree(this->currentBranch, "package");
+        this->currentBranch->addChild(tokenPackage);
 
         while (isWS(c))
             c = getNextChar();
@@ -108,6 +115,8 @@ bool Parser::checkID(std::string id) {
                 return false;
         }
 
+        Tree* token_id = new TokenTree(this->currentBranch, "id");
+        this->currentBranch->addChild(token_id);
         return true;
     }else
         return false;
@@ -115,6 +124,10 @@ bool Parser::checkID(std::string id) {
 
 //checks for <FUNCTION> : { <ws>* <func> <ws>+ <id> <ws>* <(> <ws>* <)> <ws>* <SCOPE> <ws>* } (see docs/grammar.txt)
 void Parser::checkFunc() {
+
+    Tree* currentFunc = new BranchTree(this->currentBranch, "FUNCTION");
+    this->currentBranch->addChild(currentFunc);
+    this->currentBranch = currentFunc;
 
     char c = getNextChar();
     std::string current;
@@ -131,6 +144,8 @@ void Parser::checkFunc() {
 
     if (current != "func")
         throw std::invalid_argument("Expected <func> keyword but found " + current);
+    Tree* token_func = new TokenTree(currentFunc, "func");
+    currentFunc->addChild(token_func);
 
     //removes ws
     while (isWS(c))
@@ -153,6 +168,8 @@ void Parser::checkFunc() {
         current = c;
         throw std::invalid_argument("Expected <(> but found " + current);
     }
+    Tree* token_bracket_open = new TokenTree(currentFunc, "(");
+    currentFunc->addChild(token_bracket_open);
 
     //removes ws
     c = getNextChar();
@@ -164,6 +181,8 @@ void Parser::checkFunc() {
         current = c;
         throw std::invalid_argument("Expected <)> but found " + current);
     }
+    Tree* token_bracket_close = new TokenTree(currentFunc, ")");
+    currentFunc->addChild(token_bracket_close);
 
     //removes ws
     c = getNextChar();
@@ -193,6 +212,11 @@ bool Parser::isIDCharacter(char c) {
 
 //checks for <SCOPE> : { <ws>* <{> <ws>* <EXPRESSION>* <ws>* <}> <ws>* } (see docs/grammar.txt)
 void Parser::checkScope() {
+    Tree* currentScope = new BranchTree(this->currentBranch, "SCOPE");
+    this->currentBranch->addChild(currentScope);
+    this->currentBranch = currentScope;
+
+
     char c = this->currentChar;
 
     while (isWS(c)){
@@ -201,12 +225,16 @@ void Parser::checkScope() {
 
     if (!checkScopeBegin(c))
         throw std::invalid_argument("Expected new scope");
+    Tree* token_scope_open = new TokenTree(currentScope, "{");
+    currentScope->addChild(token_scope_open);
 
     while (!checkScopeEnd(currentChar)){
         if (currentChar == 0)
             throw std::invalid_argument("EOF before a scope was closed");
         checkExpression();
     }
+    Tree* token_scope_close = new TokenTree(currentScope, "}");
+    currentScope->addChild(token_scope_close);
 }
 
 char Parser::getNextCharNoWS() {
@@ -220,6 +248,12 @@ void Parser::checkExpression() {
     char c = getNextCharNoWS();
     if(c == '}' || c == 0)
         return;
+
+    Tree* currentExpression = new BranchTree(this->currentBranch, "EXPRESSION");
+    this->currentBranch->addChild(currentExpression);
+    this->currentBranch = currentExpression;
+
+
     std::string current = "";
     //checks for <var>
     while (!isWS(c)){
@@ -229,6 +263,8 @@ void Parser::checkExpression() {
 
     if (current != "var")
         throw std::invalid_argument("Expected <var> keyword but found: " + current);
+    Tree* token_var = new TokenTree(currentExpression, "var");
+    currentExpression->addChild(token_var);
 
     c = getNextCharNoWS();
 
@@ -249,9 +285,13 @@ void Parser::checkExpression() {
         current += c;
         throw std::invalid_argument("Expected <=> but found: " + current);
     }
+    Tree* token_equals = new TokenTree(currentExpression, "=");
+    currentExpression->addChild(token_equals);
 
     if (!isNumber())
         throw std::invalid_argument("Expected a number but sadly there was no number:(");
+    Tree* token_number = new TokenTree(currentExpression, "number");
+    currentExpression->addChild(token_number);
     }
 
 bool Parser::isNumber() {
