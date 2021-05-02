@@ -19,7 +19,8 @@ void CompileController::start() {
     try {
         p->parse();
     } catch (std::exception &e) {
-        std::cout << "[Parsing Error] Error while parsing: " << e.what() << std::endl;
+        std::cout << "[Parsing Error] Error while parsing: " << e.what() << std::endl << "This error occurred in line "
+        << p->getLine() << std::endl;
     }
 
     this->astRoot = p->getAstRoot();

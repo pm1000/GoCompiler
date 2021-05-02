@@ -7,6 +7,7 @@
 Parser::Parser(std::string content){
     this->content = content;
     this->pos = 0;
+    this->line = 1;
 }
 
 Parser::~Parser() = default;
@@ -41,8 +42,10 @@ char Parser::getNextChar() {
         currentChar = 0;
     }
 
+    if (currentChar == '\n')
+        ++line;
+
     return this->currentChar;
-    //return (pos < this->content.size()) ? this->content.at(pos++) : 0;
 }
 
 bool Parser::isWS(char c) {
@@ -349,4 +352,8 @@ bool Parser::isNumber() {
     else {
         throw std::invalid_argument("A number must not contain letters.");
     }
+}
+
+int Parser::getLine() const {
+    return line;
 }

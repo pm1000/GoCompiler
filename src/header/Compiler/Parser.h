@@ -19,8 +19,10 @@ private:
     std::string content;
     char currentChar;
     int pos;
+    int line;
     Tree* currentBranch;
     Tree* currentScope;
+
     char getNextChar();
     static bool isWS(char c) ;
     static bool isLetter(char c) ;
@@ -41,9 +43,9 @@ public:
     virtual ~Parser();
 
     void parse();
-
     Tree* getAstRoot();
     Tree* getSymbolTableRoot();
+    int getLine() const;
 };
 
 

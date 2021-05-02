@@ -55,7 +55,6 @@ void IOController::start() {
 
 }
 
-
 void IOController::writeFile(Tree *tree, std::string fileName, std::string prefix) {
 
     std::size_t pos = fileName.find_last_of('/');
