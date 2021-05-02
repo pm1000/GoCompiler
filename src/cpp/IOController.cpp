@@ -33,6 +33,7 @@ std::string IOController::readFile(std::string path) {
 void IOController::start() {
 
     for (const auto &file : std::filesystem::directory_iterator(inputDirectory + "/")){
+        std::cout << file.path() << std::endl;
         std::string input = readFile(file.path());
         CompileController* controller = new CompileController();
         controller->init(input);

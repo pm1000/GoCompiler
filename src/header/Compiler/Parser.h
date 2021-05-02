@@ -14,6 +14,8 @@ private:
     Tree* astRoot = new BranchTree(nullptr, "");
     Tree* symbolTableRoot = new BranchTree(nullptr, "");
     std::string content;
+    char currentChar;
+    int pos;
     char getNextChar();
     static bool isWS(char c) ;
     static bool isLetter(char c) ;

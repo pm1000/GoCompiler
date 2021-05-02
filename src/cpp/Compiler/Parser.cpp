@@ -7,6 +7,7 @@
 
 Parser::Parser(std::string content){
     this->content = content;
+    this->pos = 0;
 }
 
 Parser::~Parser() = default;
@@ -14,15 +15,12 @@ Parser::~Parser() = default;
 void Parser::parse() {
 
     // Parse the string, fill the ast-tree and the symbol table
-    char c = getNextChar();
-
     //check for <PACKAGE_INCLUDE> (see docs/grammar.txt)
     std::string current = "";
-    while (c != 0){
-        //check for <PACKAGE_INCLUDE>
-        checkForStart();
-        checkFunc();
-    }
+    //check for <PACKAGE_INCLUDE>
+    checkForStart();
+    checkFunc();
+
 
 }
 
@@ -35,8 +33,15 @@ Tree *Parser::getSymbolTableRoot() {
 }
 
 char Parser::getNextChar() {
-    static unsigned int pos = 0;
-    return (pos < this->content.size()) ? this->content.at(pos++) : 0;
+    if (pos < this->content.size()) {
+        this->currentChar = this->content.at(pos);
+        pos++;
+    } else {
+        currentChar = 0;
+    }
+
+    return this->currentChar;
+    //return (pos < this->content.size()) ? this->content.at(pos++) : 0;
 }
 
 bool Parser::isWS(char c) {
@@ -46,7 +51,7 @@ bool Parser::isWS(char c) {
 }
 
 bool Parser::isLetter(char c) {
-    if ((c >= 'a' && c <= 'z') || (c <= 'A' && c <= 'Z'))
+    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
         return true;
     return false;
 }
@@ -62,7 +67,6 @@ bool Parser::checkForStart() {
     char c = getNextChar();
     std::string current = "";
 
-    while (c != 0) {
         //checks for ws before keyword
         while (isWS(c))
             c = getNextChar();
@@ -74,7 +78,7 @@ bool Parser::checkForStart() {
         }
 
         if (current != "package")
-            throw std::invalid_argument("Expected keyword <package> but found" + current);
+            throw std::invalid_argument("Expected keyword <package> but found: " + current);
 
         while (isWS(c))
             c = getNextChar();
@@ -86,8 +90,8 @@ bool Parser::checkForStart() {
         }
 
         if (!checkID(current))
-            throw std::invalid_argument("Expected token for <package> but found" + current);
-    }
+            throw std::invalid_argument("Expected token for <package> but found: " + current);
+
 }
 
 //checks for id = [_a-zA-Z][a-zA-Z0-9_]* (see docs/grammar.txt)
@@ -99,7 +103,7 @@ bool Parser::checkID(std::string id) {
 
         //check for invalid chars
         for (int i = 1; i < id.length(); ++i){
-            if (!isLetter(id[i]) || !isDigit(id[i]) || id[i] != '_')
+            if (!isLetter(id[i]) && !isDigit(id[i]) && id[i] != '_')
                 return false;
         }
 
@@ -120,7 +124,7 @@ void Parser::checkFunc() {
 
     //checks for "func"
     while (!isWS(c)){
-        current += getNextChar();
+        current += c;
         c = getNextChar();
     }
 
@@ -145,7 +149,7 @@ void Parser::checkFunc() {
 
     //checks for <(>
     if (c != '(') {
-        current += c;
+        current = c;
         throw std::invalid_argument("Expected <(> but found " + current);
     }
 
@@ -156,7 +160,7 @@ void Parser::checkFunc() {
 
     //checks for <)>
     if (c!= ')'){
-        current += c;
+        current = c;
         throw std::invalid_argument("Expected <)> but found " + current);
     }
 
@@ -188,13 +192,17 @@ bool Parser::isIDCharacter(char c) {
 
 //checks for <SCOPE> : { <ws>* <{> <ws>* <EXPRESSION>* <ws>* <}> <ws>* } (see docs/grammar.txt)
 void Parser::checkScope() {
-    char c = getNextCharNoWS();
+    char c = this->currentChar;
+
+    while (isWS(c)){
+        c = getNextChar();
+    }
 
     if (!checkScopeBegin(c))
         throw std::invalid_argument("Expected new scope");
 
-    while (!checkScopeEnd(c)){
-        if (c == 0)
+    while (!checkScopeEnd(currentChar)){
+        if (currentChar == 0)
             throw std::invalid_argument("EOF before a scope was closed");
         checkExpression();
     }
@@ -209,8 +217,9 @@ char Parser::getNextCharNoWS() {
 
 void Parser::checkExpression() {
     char c = getNextCharNoWS();
+    if(c == '}' || c == 0)
+        return;
     std::string current = "";
-
     //checks for <var>
     while (!isWS(c)){
         current += c;
@@ -254,11 +263,10 @@ bool Parser::isNumber() {
     }
 
     // Check for at least one digit
-    if (isDigit(c)) {
-        c = getNextChar();
-    } else {
+    if (!isDigit(c)) {
         throw std::invalid_argument("A number must contain a digit in the beginning.");
     }
+
     while (isDigit(c)) {
         c = getNextChar();
     }
@@ -279,7 +287,9 @@ bool Parser::isNumber() {
             throw std::invalid_argument("A number must end with a digit.");
         }
 
-    } else {
+    }else if (isWS(c))
+        return true;
+    else {
         throw std::invalid_argument("A number must not contain letters.");
     }
 }
