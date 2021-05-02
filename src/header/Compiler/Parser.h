@@ -13,13 +13,15 @@ class Parser {
 private:
     Tree* astRoot = new BranchTree(nullptr);
     Tree* symbolTableRoot = new BranchTree(nullptr);
+    std::string content;
+    char getNextChar();
 
 
 public:
-    Parser();
+    Parser(std::string content);
     virtual ~Parser();
 
-    void parse(std::string content);
+    void parse();
 
     Tree* getAstRoot();
     Tree* getSymbolTableRoot();

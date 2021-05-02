@@ -15,10 +15,11 @@ void CompileController::init(std::string content) {
 void CompileController::start() {
 
     // Start Phase 1: Parser
-    Parser p;
-    p.parse(this->content);
-    this->astRoot = p.getAstRoot();
-    this->symbolTableRoot = p.getSymbolTableRoot();
+    Parser* p = new Parser(content);
+    p->parse();
+    this->astRoot = p->getAstRoot();
+    this->symbolTableRoot = p->getSymbolTableRoot();
+    delete p;
 
 }
 

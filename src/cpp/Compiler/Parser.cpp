@@ -4,11 +4,13 @@
 
 #include "../../header/Compiler/Parser.h"
 
-Parser::Parser() = default;
+Parser::Parser(std::string content){
+    this->content = content;
+}
 
 Parser::~Parser() = default;
 
-void Parser::parse(std::string content) {
+void Parser::parse() {
 
     // Parse the string, fill the ast-tree and the symbol table
 
@@ -20,4 +22,8 @@ Tree *Parser::getAstRoot() {
 
 Tree *Parser::getSymbolTableRoot() {
     return this->symbolTableRoot;
+}
+
+char Parser::getNextChar() {
+    return 0;
 }
