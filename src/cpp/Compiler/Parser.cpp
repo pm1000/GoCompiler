@@ -27,3 +27,21 @@ Tree *Parser::getSymbolTableRoot() {
 char Parser::getNextChar() {
     return 0;
 }
+
+bool Parser::isWS(char c) const {
+    if ('\t' == c || '\n' == c || ' ' == c)
+        return true;
+    return false;
+}
+
+bool Parser::isLetter(char c) const {
+    if ((c >= 'a' && c <= 'z') || (c <= 'A' && c <= 'Z'))
+        return true;
+    return false;
+}
+
+bool Parser::isNumber(char c) const {
+    if (c >= '0' && c <= '9')
+        return true;
+    return false;
+}
