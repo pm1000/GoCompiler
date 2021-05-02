@@ -6,8 +6,23 @@
 #define Y_RASTER_A_PARSER_H
 
 
-class Parser {
+#include "../Tree/Tree.h"
+#include "../Tree/BranchTree.h"
 
+class Parser {
+private:
+    Tree* astRoot = new BranchTree(nullptr);
+    Tree* symbolTableRoot = new BranchTree(nullptr);
+
+
+public:
+    Parser();
+    virtual ~Parser();
+
+    void parse(std::string content);
+
+    Tree* getAstRoot();
+    Tree* getSymbolTableRoot();
 };
 
 
