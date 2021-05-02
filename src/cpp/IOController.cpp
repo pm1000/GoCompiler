@@ -21,8 +21,8 @@ std::string IOController::readFile(std::string path) {
 
     std::string completeFile;
     std::string line;
-    while(getline(file,line)){
-        completeFile += line;
+    while(getline(file,line, '\n')){
+        completeFile += line + '\n';
     }
 
     file.close();
@@ -32,11 +32,14 @@ std::string IOController::readFile(std::string path) {
 
 void IOController::start() {
 
-    for (const auto &file : std::filesystem::directory_iterator(inputDirectory)){
+    for (const auto &file : std::filesystem::directory_iterator(inputDirectory + "/")){
         std::string input = readFile(file.path());
         CompileController* controller = new CompileController();
-        controller.start(input);
-        writeFile(controller.getTree());
+        controller->init(input);
+        controller->start();
+        writeFile(controller->getAstRoot(), file.path());
+        writeFile(controller->getSymbolTableRoot(), file.path());
+        delete controller;
     }
 
 }
