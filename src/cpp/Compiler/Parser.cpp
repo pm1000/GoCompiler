@@ -92,6 +92,7 @@ bool Parser::checkForStart() {
         if (!checkID(current))
             throw std::invalid_argument("Expected token for <package> but found: " + current);
 
+        return true;
 }
 
 //checks for id = [_a-zA-Z][a-zA-Z0-9_]* (see docs/grammar.txt)

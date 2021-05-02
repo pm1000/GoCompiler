@@ -11,8 +11,8 @@
 
 class Parser {
 private:
-    Tree* astRoot = new BranchTree(nullptr, "");
-    Tree* symbolTableRoot = new BranchTree(nullptr, "");
+    Tree* astRoot = new BranchTree(nullptr, "Root ->");
+    Tree* symbolTableRoot = new BranchTree(nullptr, "Root ->");
     std::string content;
     char currentChar;
     int pos;
