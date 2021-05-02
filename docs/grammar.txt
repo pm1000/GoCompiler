@@ -1,0 +1,24 @@
+start: {<PACKAGE_INCLUDE> <FUNCTION>+}
+
+<PACKAGE_INCLUDE>   : { <ws>* <package> <ws>+ <id> <ws>+ }
+<FUNCTION>          : { <ws>* <func> <ws>+ <id> <ws>* <(> <ws>* <)> <ws>* <SCOPE> <ws>* }
+<SCOPE>             : { <ws>* <{> <ws>* <EXPRESSION>* <ws>* <}> <ws>* }
+<EXPRESSION>        : { <ws>* <var> <ws>+ <id> <ws>* <=> <ws>* <number> <ws>* <;> <ws>* }
+
+
+
+TOKEN_LIST:
+//<token>     : definition
+
+<package>   : package
+<ws>        : " " | "\t" | "\n"
+<func>      : func
+<(>         : (
+<)>         : )
+<{>         : {
+<}>         : }
+<id>        : [_a-zA-Z][a-zA-Z0-9_]*
+<var>       : var
+<=>         : =
+<;>         : ;
+<number>    : [-]?[0-9]+[.]?[0-9]*
