@@ -10,7 +10,7 @@
 
 class BranchTree : public Tree {
 public:
-    BranchTree(Tree *parent);
+    BranchTree(Tree *parent, std::string name);
 
     virtual ~BranchTree();
 

@@ -46,5 +46,34 @@ void IOController::start() {
 
 
 void IOController::writeFile(Tree *tree, std::string fileName) {
-    fileName = "out_" + fileName;
+    std::string newFileName = "out_" + fileName;
+    std::vector<std::string> output = printTreeRecursive(tree);
+
+    for (std::string &tmp : output) {
+        std::cout << tmp << std::endl;
+    }
+}
+
+
+std::vector<std::string> IOController::printTreeRecursive(Tree* current) {
+
+    // Helper vector, for each line one string.
+    std::vector<std::string> output;
+
+    // Print the current node.
+    std::string currentNodeString = current->getName();
+    if (current->getChildrenSize() > 0) {
+        currentNodeString += " ->";
+    }
+    output.push_back(currentNodeString);
+
+    // Print all child notes.
+    for (int i = 0; i < current->getChildrenSize(); i++) {
+        for (std::string &childStrings : printTreeRecursive(current->getChildAt(i))) {
+            output.push_back("\t" + childStrings);
+        }
+    }
+
+    // Return the string created.
+    return output;
 }
