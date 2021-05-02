@@ -17,14 +17,18 @@ private:
     char getNextChar();
     static bool isWS(char c) ;
     static bool isLetter(char c) ;
-    static bool isNumber(char c) ;
+    static bool isDigit(char c) ;
     bool checkForStart();
     bool checkID(std::string id);
-    bool checkFunc();
-    bool checkIDCharacter(char c);
+    void checkFunc();
+    bool isIDCharacter(char c);
     bool checkScopeBegin(char c);
     bool checkScopeEnd(char c);
-    bool checkScope();
+    void checkScope();
+    char getNextCharNoWS();
+    void checkExpression();
+    bool isNumber();
+
 public:
     Parser(std::string content);
     virtual ~Parser();

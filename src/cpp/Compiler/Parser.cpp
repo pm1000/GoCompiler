@@ -51,7 +51,7 @@ bool Parser::isLetter(char c) {
     return false;
 }
 
-bool Parser::isNumber(char c) {
+bool Parser::isDigit(char c) {
     if (c >= '0' && c <= '9')
         return true;
     return false;
@@ -99,7 +99,7 @@ bool Parser::checkID(std::string id) {
 
         //check for invalid chars
         for (int i = 1; i < id.length(); ++i){
-            if (!isLetter(id[i]) || !isNumber(id[i]) || id[i] != '_')
+            if (!isLetter(id[i]) || !isDigit(id[i]) || id[i] != '_')
                 return false;
         }
 
@@ -109,7 +109,7 @@ bool Parser::checkID(std::string id) {
 }
 
 //checks for <FUNCTION> : { <ws>* <func> <ws>+ <id> <ws>* <(> <ws>* <)> <ws>* <SCOPE> <ws>* } (see docs/grammar.txt)
-bool Parser::checkFunc() {
+void Parser::checkFunc() {
 
     char c = getNextChar();
     std::string current;
@@ -133,7 +133,7 @@ bool Parser::checkFunc() {
 
     //checks for token
     current = "";
-    while(checkIDCharacter(c)){
+    while(isIDCharacter(c)){
         current += c;
         c = getNextChar();
     }
@@ -180,12 +180,68 @@ bool Parser::checkScopeEnd(char c) {
     return false;
 }
 
-bool Parser::checkIDCharacter(char c) {
-    if (isLetter(c) || isNumber(c) || c == '_')
+bool Parser::isIDCharacter(char c) {
+    if (isLetter(c) || isDigit(c) || c == '_')
         return true;
     return false;
 }
 
-bool Parser::checkScope() {
+//checks for <SCOPE> : { <ws>* <{> <ws>* <EXPRESSION>* <ws>* <}> <ws>* } (see docs/grammar.txt)
+void Parser::checkScope() {
+    char c = getNextCharNoWS();
+
+    if (!checkScopeBegin(c))
+        throw std::invalid_argument("Expected new scope");
+
+    while (!checkScopeEnd(c)){
+        checkExpression();
+    }
+
+
+}
+
+char Parser::getNextCharNoWS() {
+    char c = getNextChar();
+    while (isWS(c))
+        c = getNextChar();
+    return c;
+}
+
+void Parser::checkExpression() {
+    char c = getNextCharNoWS();
+    std::string current = "";
+
+    while (!isWS(c)){
+        current += c;
+        c = getNextChar();
+    }
+
+    if (current != "var")
+        throw std::invalid_argument("Expected <var> keyword but found: " + current);
+
+    c = getNextCharNoWS();
+
+    current = "";
+    while(!isWS(c) && isIDCharacter(c)){
+        current += c;
+        c = getNextChar();
+    }
+
+    if (!checkID(current))
+        throw std::invalid_argument("Expected token but found: " + current);
+
+    c = getNextCharNoWS();
+
+    if (c != '='){
+        current += c;
+        throw std::invalid_argument("Expected <=> but found: " + current);
+    }
+
+    if (!isNumber())
+        throw std::invalid_argument("Expected a number but sadly there was no number:(");
+
+}
+
+bool Parser::isNumber() {
     return false;
 }

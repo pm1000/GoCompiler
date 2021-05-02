@@ -1,10 +1,10 @@
 start: {<PACKAGE_INCLUDE> <FUNCTION>+}
 
-<PACKAGE_INCLUDE>   : { <ws>* <package> <ws>+ <id> <ws>+ }
-<FUNCTION>          : { <ws>* <func> <ws>+ <id> <ws>* <(> <ws>* <)> <ws>* <SCOPE> <ws>* }
-<SCOPE>             : { <ws>* <{> <ws>* <EXPRESSION>* <ws>* <}> <ws>* }
-<EXPRESSION>        : { <ws>* <var> <ws>+ <id> <ws>* <=> <ws>* <number> <ws>* <;> <ws>* }
 
+<PACKAGE_INCLUDE>   : { <ws>* <package> <ws>+ <id> <ws>+ }
+<FUNCTION>          : { <ws>* <func> <ws>+ <id> <ws>* <(> <ws>* <)> <SCOPE> }
+<SCOPE>             : { <ws>* <{> <EXPRESSION>* <}> <ws>* }
+<EXPRESSION>        : { <ws>* <var> <ws>+ <id> <ws>* <=> <ws>* <number> <ws>* <;> <ws>* }
 
 
 TOKEN_LIST:
