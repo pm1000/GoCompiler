@@ -16,9 +16,15 @@ void CompileController::start() {
 
     // Start Phase 1: Parser
     Parser* p = new Parser(content);
-    p->parse();
+    try {
+        p->parse();
+    } catch (std::exception &e) {
+        std::cout << "[Parsing Error] Error while parsing: " << e.what() << std::endl;
+    }
+
     this->astRoot = p->getAstRoot();
     this->symbolTableRoot = p->getSymbolTableRoot();
+
     delete p;
 
 }

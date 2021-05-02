@@ -32,14 +32,24 @@ std::string IOController::readFile(std::string path) {
 
 void IOController::start() {
 
-    for (const auto &file : std::filesystem::directory_iterator(inputDirectory + "/")){
-        std::cout << file.path() << std::endl;
+    for (const auto &file : std::filesystem::directory_iterator(inputDirectory)){
+        // Log the current file
+        std::cout << "Current File: " << file.path() << std::endl;
         std::string input = readFile(file.path());
+
+        // Start compiling
         CompileController* controller = new CompileController();
         controller->init(input);
         controller->start();
+
+        // Prepare Console output
+        std::cout << "Abstract Syntax Tree:" << std::endl;
         writeFile(controller->getAstRoot(), file.path());
+        std::cout << "Syntax Table Tree:" << std::endl;
         writeFile(controller->getSymbolTableRoot(), file.path());
+        std::cout << std::endl << std::endl;
+
+        // Remove controller
         delete controller;
     }
 
@@ -47,6 +57,7 @@ void IOController::start() {
 
 
 void IOController::writeFile(Tree *tree, std::string fileName) {
+
     std::string newFileName = "out_" + fileName;
     std::vector<std::string> output = printTreeRecursive(tree);
 

@@ -7,6 +7,7 @@
 
 
 #include <string>
+#include <iostream>
 
 #include "../../header/Compiler/Parser.h"
 
