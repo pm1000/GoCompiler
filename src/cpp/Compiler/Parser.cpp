@@ -243,5 +243,41 @@ void Parser::checkExpression() {
 }
 
 bool Parser::isNumber() {
-    return false;
+
+    char c = getNextCharNoWS();
+
+    // Check for + and -
+    if (c == '+' || c == '-') {
+        c = getNextChar();
+    }
+
+    // Check for at least one digit
+    if (isDigit(c)) {
+        c = getNextChar();
+    } else {
+        throw std::invalid_argument("A number must contain a digit in the beginning.");
+    }
+    while (isDigit(c)) {
+        c = getNextChar();
+    }
+
+    // If the next char is a point
+    if (c == '.') {
+        c = getNextChar();
+
+        // Check for digits after the point
+        while (isDigit(c)) {
+            c = getNextChar();
+        }
+
+        // No more digit, number is finished
+        if (isWS(c)) {
+            return true;
+        } else {
+            throw std::invalid_argument("A number must end with a digit.");
+        }
+
+    } else {
+        throw std::invalid_argument("A number must not contain letters.");
+    }
 }
