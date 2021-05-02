@@ -194,10 +194,10 @@ void Parser::checkScope() {
         throw std::invalid_argument("Expected new scope");
 
     while (!checkScopeEnd(c)){
+        if (c == 0)
+            throw std::invalid_argument("EOF before a scope was closed");
         checkExpression();
     }
-
-
 }
 
 char Parser::getNextCharNoWS() {
@@ -211,6 +211,7 @@ void Parser::checkExpression() {
     char c = getNextCharNoWS();
     std::string current = "";
 
+    //checks for <var>
     while (!isWS(c)){
         current += c;
         c = getNextChar();
@@ -222,6 +223,7 @@ void Parser::checkExpression() {
     c = getNextCharNoWS();
 
     current = "";
+    //checks for <id>
     while(!isWS(c) && isIDCharacter(c)){
         current += c;
         c = getNextChar();
@@ -232,6 +234,7 @@ void Parser::checkExpression() {
 
     c = getNextCharNoWS();
 
+    //checks for <=>
     if (c != '='){
         current += c;
         throw std::invalid_argument("Expected <=> but found: " + current);
@@ -239,8 +242,7 @@ void Parser::checkExpression() {
 
     if (!isNumber())
         throw std::invalid_argument("Expected a number but sadly there was no number:(");
-
-}
+    }
 
 bool Parser::isNumber() {
     return false;
