@@ -311,6 +311,9 @@ void Parser::checkExpression() {
         throw std::invalid_argument("Expected a number but sadly there was no number:(");
     Tree* token_number = new TokenTree(currentExpression, "number");
     currentExpression->addChild(token_number);
+
+    // Change back to other expressions
+    this->currentBranch = this->currentBranch->getParent();
     }
 
 bool Parser::isNumber() {
