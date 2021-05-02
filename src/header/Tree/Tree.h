@@ -24,6 +24,8 @@ public:
     virtual void addChild(Tree* node);
     virtual Tree* getLastChild() const;
     virtual std::string getName() = 0;
+    Tree *getParent() const;
+    void setParent(Tree* value);
 
 
 };

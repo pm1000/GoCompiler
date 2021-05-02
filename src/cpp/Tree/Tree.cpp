@@ -37,3 +37,11 @@ Tree *Tree::getChildAt(int pos) const {
 int Tree::getChildrenSize() const {
     return children.size();
 }
+
+Tree *Tree::getParent() const {
+    return parent;
+}
+
+void Tree::setParent(Tree *value) {
+    this->parent = value;
+}
