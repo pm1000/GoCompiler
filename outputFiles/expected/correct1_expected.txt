@@ -1,0 +1,12 @@
+root ->
+    PACKAGE_INCLUDE ->
+        Token_<package>
+        Token_<id>
+    FUNCTION ->
+        Token_<func>
+        Token_<id>
+        Token_<(>
+        Token_<)>
+        SCOPE ->
+            Token_<{>
+            Token_<}>
