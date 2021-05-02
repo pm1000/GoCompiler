@@ -18,7 +18,6 @@ private:
     std::string outputDirectory;
 
     std::string readFile(std::string path);
-
     std::vector<std::string> printTreeRecursive(Tree* current);
 
 public:

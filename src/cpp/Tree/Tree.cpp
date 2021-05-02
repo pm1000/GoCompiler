@@ -13,7 +13,9 @@ Tree::Tree(Tree* parent) {
 }
 
 Tree::~Tree() {
-
+    for (int i = children.size() - 1; i >= 0; --i){
+        delete children[i];
+    }
 }
 
 Tree *Tree::getLastChild() const {
