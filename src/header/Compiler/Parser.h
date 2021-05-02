@@ -11,8 +11,8 @@
 
 class Parser {
 private:
-    Tree* astRoot = new BranchTree(nullptr);
-    Tree* symbolTableRoot = new BranchTree(nullptr);
+    Tree* astRoot = new BranchTree(nullptr, "");
+    Tree* symbolTableRoot = new BranchTree(nullptr, "");
     std::string content;
     char getNextChar();
     bool isWS(char c) const;

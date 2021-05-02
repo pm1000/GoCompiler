@@ -5,7 +5,9 @@
 #include "../../header/Tree/BranchTree.h"
 
 
-BranchTree::BranchTree(Tree *parent) : Tree(parent) {}
+BranchTree::BranchTree(Tree *parent, std::string name) : Tree(parent) {
+    this->name = name;
+}
 
 BranchTree::~BranchTree() {
 
