@@ -15,9 +15,16 @@ private:
     Tree* symbolTableRoot = new BranchTree(nullptr);
     std::string content;
     char getNextChar();
-    bool isWS(char c) const;
-    bool isLetter(char c) const;
-    bool isNumber(char c) const;
+    static bool isWS(char c) ;
+    static bool isLetter(char c) ;
+    static bool isNumber(char c) ;
+    bool checkForStart();
+    bool checkID(std::string id);
+    bool checkFunc();
+    bool checkIDCharacter(char c);
+    bool checkScopeBegin(char c);
+    bool checkScopeEnd(char c);
+    bool checkScope();
 public:
     Parser(std::string content);
     virtual ~Parser();
