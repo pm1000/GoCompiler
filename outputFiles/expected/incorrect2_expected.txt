@@ -1,13 +1,15 @@
 root ->
     PACKAGE_INCLUDE ->
         Token_<package>
-        Token_<id>
+        Token_<id> ->
+            Symbol_<main>
     FUNCTION ->
         Token_<func>
-        Token_<id>
+        Token_<id> ->
+            Symbol_<main>
         Token_<(>
         Token_<)>
         SCOPE ->
             Token_<{>
             Error<Expected "}">
-                        Abort compile!
+            Abort compile!
