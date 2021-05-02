@@ -6,7 +6,27 @@
 #define Y_RASTER_A_COMPILECONTROLLER_H
 
 
+#include <string>
+
+#include "../../header/Compiler/Parser.h"
+
 class CompileController {
+private:
+    std::string content = "";
+    Tree* astRoot = nullptr;
+    Tree* symbolTableRoot = nullptr;
+
+public:
+    CompileController();
+
+    virtual ~CompileController();
+
+    void init(std::string content);
+    void start();
+
+
+    Tree* getAstRoot();
+    Tree* getSymbolTableRoot();
 
 };
 
