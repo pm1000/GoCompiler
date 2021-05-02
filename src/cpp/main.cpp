@@ -3,7 +3,7 @@
 
 
 int main() {
-    IOController* controller = new IOController("../inputFiles/", "outputFiles");
+    IOController* controller = new IOController("../inputFiles/", "../outputFiles/created/");
     controller->start();
     delete controller;
     return 0;

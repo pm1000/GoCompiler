@@ -44,9 +44,9 @@ void IOController::start() {
 
         // Prepare Console output
         std::cout << "Abstract Syntax Tree:" << std::endl;
-        writeFile(controller->getAstRoot(), file.path());
+        writeFile(controller->getAstRoot(), file.path().string(), "out_");
         std::cout << "Syntax Table Tree:" << std::endl;
-        writeFile(controller->getSymbolTableRoot(), file.path());
+        writeFile(controller->getSymbolTableRoot(), file.path().string(), "symbol_");
         std::cout << std::endl << std::endl;
 
         // Remove controller
@@ -56,13 +56,25 @@ void IOController::start() {
 }
 
 
-void IOController::writeFile(Tree *tree, std::string fileName) {
+void IOController::writeFile(Tree *tree, std::string fileName, std::string prefix) {
 
-    std::string newFileName = "out_" + fileName;
+    std::size_t pos = fileName.find_last_of('/');
+    std::string newFileName = outputDirectory + prefix + fileName.substr(pos + 1, fileName.length() - pos - 3) + "txt";
     std::vector<std::string> output = printTreeRecursive(tree);
+    try {
+        std::fstream file;
+        file.open(newFileName, std::ios::out);
+        if (!file)
+            throw std::runtime_error("Error while creating the file: " + newFileName);
 
-    for (std::string &tmp : output) {
-        std::cout << tmp << std::endl;
+        for (std::string &tmp : output) {
+            std::cout << tmp << std::endl;
+            file << tmp + "\n";
+        }
+
+        file.close();
+    }catch (std::exception &e){
+        std::cerr << e.what() << std::endl;
     }
 }
 

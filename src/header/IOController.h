@@ -26,7 +26,7 @@ public:
     virtual ~IOController();
 
     void start();
-    void writeFile(Tree* current, std::string fileName);
+    void writeFile(Tree* current, std::string fileName, std::string prefix);
 };
 
 
