@@ -45,7 +45,7 @@ void IOController::start() {
         // Prepare Console output
         std::cout << "Abstract Syntax Tree:" << std::endl;
         writeFile(controller->getAstRoot(), file.path());
-        std::cout << "Syntax Table Tree:" << std::endl;
+        std::cout << "Symbol Table Tree:" << std::endl;
         writeFile(controller->getSymbolTableRoot(), file.path());
         std::cout << std::endl << std::endl;
 

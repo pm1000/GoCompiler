@@ -17,18 +17,3 @@ TokenTree::~TokenTree() {
 
 }
 
-int TokenTree::getChildrenSize() const {
-    return Tree::getChildrenSize();
-}
-
-Tree *TokenTree::getChildAt(int pos) const {
-    return Tree::getChildAt(pos);
-}
-
-void TokenTree::addChild(Tree *node) {
-    throw std::runtime_error("Tokens are now allowed to have children");
-}
-
-Tree *TokenTree::getLastChild() const {
-    return Tree::getLastChild();
-}

@@ -16,7 +16,7 @@ void Parser::parse() {
     // Parse the string, fill the ast-tree and the symbol table
     //check for <PACKAGE_INCLUDE> (see docs/grammar.txt)
     std::string current = "";
-    //check for <PACKAGE_INCLUDE>
+    this->currentScope = this->symbolTableRoot;
     this->currentBranch = this->astRoot;
     checkForStart();
     this->currentBranch = this->astRoot;
@@ -115,8 +115,15 @@ bool Parser::checkID(std::string id) {
                 return false;
         }
 
+        // Add symbol to table
+        Tree* newId = new SymbolTree(this->currentScope, id);
+        this->currentScope->addChild(newId);
+
+        // Add ast element
         Tree* token_id = new TokenTree(this->currentBranch, "id");
+        token_id->addChild(newId);
         this->currentBranch->addChild(token_id);
+
         return true;
     }else
         return false;
@@ -212,9 +219,14 @@ bool Parser::isIDCharacter(char c) {
 
 //checks for <SCOPE> : { <ws>* <{> <ws>* <EXPRESSION>* <ws>* <}> <ws>* } (see docs/grammar.txt)
 void Parser::checkScope() {
-    Tree* currentScope = new BranchTree(this->currentBranch, "SCOPE");
-    this->currentBranch->addChild(currentScope);
-    this->currentBranch = currentScope;
+    Tree* currentBranch = new BranchTree(this->currentBranch, "SCOPE");
+    this->currentBranch->addChild(currentBranch);
+    this->currentBranch = currentBranch;
+
+    // Add this to symbol table
+    Tree* thisScope = this->currentScope;
+    this->currentScope = new ScopeTree(this->currentScope, "SCOPE");
+    thisScope->addChild(this->currentScope);
 
 
     char c = this->currentChar;
@@ -225,16 +237,20 @@ void Parser::checkScope() {
 
     if (!checkScopeBegin(c))
         throw std::invalid_argument("Expected new scope");
-    Tree* token_scope_open = new TokenTree(currentScope, "{");
-    currentScope->addChild(token_scope_open);
+    Tree* token_scope_open = new TokenTree(currentBranch, "{");
+    currentBranch->addChild(token_scope_open);
 
     while (!checkScopeEnd(currentChar)){
         if (currentChar == 0)
             throw std::invalid_argument("EOF before a scope was closed");
         checkExpression();
     }
-    Tree* token_scope_close = new TokenTree(currentScope, "}");
-    currentScope->addChild(token_scope_close);
+
+    Tree* token_scope_close = new TokenTree(currentBranch, "}");
+    currentBranch->addChild(token_scope_close);
+
+    // Leaving the scope, reset the symbol table to the last scope
+    this->currentScope = thisScope;
 }
 
 char Parser::getNextCharNoWS() {

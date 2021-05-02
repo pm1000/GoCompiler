@@ -10,15 +10,17 @@
 #include "../Tree/Tree.h"
 #include "../Tree/BranchTree.h"
 #include "../../header/Tree/TokenTree.h"
+#include "../Tree/ScopeTree.h"
 
 class Parser {
 private:
     Tree* astRoot = new BranchTree(nullptr, "Root");
-    Tree* symbolTableRoot = new BranchTree(nullptr, "Root");
+    Tree* symbolTableRoot = new ScopeTree(nullptr, "Root");
     std::string content;
     char currentChar;
     int pos;
     Tree* currentBranch;
+    Tree* currentScope;
     char getNextChar();
     static bool isWS(char c) ;
     static bool isLetter(char c) ;

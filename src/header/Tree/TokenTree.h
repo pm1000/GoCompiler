@@ -14,10 +14,6 @@ public:
     TokenTree(Tree *parent, std::string name);
     ~TokenTree() override;
 
-    int getChildrenSize() const override;
-    Tree *getChildAt(int pos) const override;
-    void addChild(Tree *node) override;
-    Tree *getLastChild() const override;
     std::string getName() override;
 };
 
