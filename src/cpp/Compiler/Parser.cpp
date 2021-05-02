@@ -25,5 +25,6 @@ Tree *Parser::getSymbolTableRoot() {
 }
 
 char Parser::getNextChar() {
-    return 0;
+    static unsigned int pos = 0;
+    return (pos < this->content.size()) ? this->content.at(pos++) : 0;
 }
