@@ -1,0 +1,10 @@
+root ->
+    PACKAGE_INCLUDE ->
+        Token_<package>
+        Token_<id>
+    FUNCTION ->
+        Token_<func>
+        Token_<id>
+        Token_<(>
+        Error<Expected ")">
+            Abort compile!
