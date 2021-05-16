@@ -22,7 +22,3 @@ TOKEN_LIST:
 <=>         : =
 <;>         : ;
 <number>    : [-+]?[0-9]+[.]?[0-9]*
-
-
-    ASSIGN, NUMBER, PACKAGE, FUNC, VAR, ENDSTATEMENT,
-    OPENPARENT, CLOSEPARENT, OPENCURLY, CLOSECURLY, RELOP, SCOP
