@@ -1,17 +1,21 @@
 %{
     #include <iostream>
+
+    #include "TreeNode.h"
+    #include "parser.h"
+
     using namespace std;
+
     // global value for int tokens
     int yylval = 0;
 
-    typedef enum {
+    /*typedef enum {
         ASSIGN, NUMBER, PACKAGE, FUNC, VAR, ENDSTATEMENT, ID,
         OPENPARENT, CLOSEPARENT, OPENCURLY, CLOSECURLY, RELOP, SCOPE,
-        UNKNOWN=999, FINISHED=999999 } tokenType;
+        UNKNOWN=999, FINISHED=999999 } tokenType;*/
 
-    int installID();
-    int installNum();
 %}
+
 
 delim   [ \t\n]
 ws      {delim}+
@@ -20,18 +24,28 @@ digit   [0-9]
 id      {letter}({letter}|{digit}|[_])*
 number  [+-]?{digit}+[.]?{digit}*
 
+
+
+%option outfile="lexer.c" header-file="lexer.h"
+%option warn nodefault
+
+%option reentrant noyywrap never-interactive nounistd
+%option bison-bridge
+
+
+
 %%
 
 {ws}        {/* no action and no return*/}
 package     {return(PACKAGE);}
 func        {return(FUNC);}
 var         {return(VAR);}
-{id}        {yylval = (int) installID(); return(ID);}
-{number}    {yylval = (int) installNum(); return(NUMBER);}
-"("         {yylval = OPENPARENT; return(RELOP);}
-")"         {yylval = CLOSEPARENT; return(RELOP);}
-"{"         {yylval = OPENCURLY; return(SCOPE);}
-"}"         {yylval = CLOSECURLY; return(SCOPE);}
+{id}        {sscanf(yytext, "%s", &yylval->value); return(ID);}
+{number}    {sscanf(yytext, "%d", &yylval->value); return(NUMBER);}
+"("         {return(OPENPARENT);}
+")"         {return(CLOSEPARENT);}
+"{"         {return(OPENCURLY);}
+"}"         {return(CLOSECURLY);}
 "="         {return(ASSIGN);}
 ";"         {return(ENDSTATEMENT);}
 .           {cout <<"Unknown character[" << yytext[0] << "] \n"; return(UNKNOWN);}
@@ -39,34 +53,8 @@ var         {return(VAR);}
 
 %%
 
-int installID(){
-    cout << "ID found " << yylval << endl;
+
+int yyerror(const char *msg) {
+    fprintf(stderr, "Error: %s\n", msg);
     return 0;
 }
-
-int installNum(){
-    cout << "NUM found " << yylval << endl;
-    return 0;
-}
-
-int yywrap(void) {
-    return 1;
-}
-
-int main( int argc, char *argv[] )
-{
-    yyin = ( ( 2 == argc ) ? fopen( argv[1], "r" ) : stdin );
-    /* Call the lexer, then quit. */
-    int tok = -1;
-    while ( tok != FINISHED ) {
-        tok = yylex();
-        cout << "Token = " << tok<< ",\t last value of yylval = " << yylval << endl;
-    };
-    return 0;
-}
-
-
-
-
-
-

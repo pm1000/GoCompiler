@@ -1,1 +1,8 @@
 flex --header-file=lexer.hh --outfile=lexer.cc flex.l
+
+
+
+
+
+
+g++ main.cpp lexer.c lexer.h parser.c parser.h TreeNode.cpp TreeNode.h
