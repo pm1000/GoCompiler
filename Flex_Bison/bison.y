@@ -1,0 +1,37 @@
+%{
+	#include <ctype.h>
+	#include <stdio.h>
+	#include "lexer.hh"
+	#define YYSTYPE double
+%}
+
+
+%right ASSIGN
+
+%token NUMBER
+%token PACKAGE
+%token ID
+%token FUNC
+%token OPENPARENT
+%token CLOSEPARENT
+%token OPENCURLY
+%token CLOSECURLY
+%token ENDSTATEMENT
+%token VAR
+%token ASSIGN
+%token RELOP
+
+%%
+PACKAGE_INCLUDE : PACKAGE ID
+		;
+FUNCTION	: FUNC ID OPENPARENT CLOSEPARENT SCOPE
+		;
+SCOPE 		: OPENCURLY EXPRESSIONS CLOSECURLY
+		;
+EXPRESSIONS	: EXPRESSION EXPRESSIONS
+		| EXPRESSION
+		;
+EXPRESSION	: VAR ID ASSIGN NUMBER
+		|
+		;
+
