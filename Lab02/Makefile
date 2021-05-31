@@ -32,15 +32,15 @@ HEADERS=parser.hh scanner.hh
 
 calc++ : calc++.o scanner.o parser.o driver.o
 
-calc++.o : src/calc++.cc Header/driver.hh parser.hh
+calc++.o : calc++.cc Header/driver.hh parser.hh
 
 %.o: %.cc
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-scanner.cc: src/scanner.ll
+scanner.cc: scanner.ll
 	$(LEX) $(LFLAGS) -o scanner.cc scanner.ll
 
-parser.cc parser.hh: src/parser.yy
+parser.cc parser.hh: parser.yy
 	$(YACC) $(YFLAGS) -o parser.cc parser.yy
 
 clean:
