@@ -30,8 +30,50 @@ void TreeNode::addChild(TreeNode *node) {
     }
 }
 
-void TreeNode::printTree() {
-    cout << "test" << endl;
+std::vector<std::string> TreeNode::printTree() {
+    // Helper vector, for each line one string.
+    std::vector<std::string> output;
+
+    // Print the current node.
+    std::string currentNodeString =  std::to_string(getType());
+    if (children.size() > 0) {
+        currentNodeString += " ->";
+    }
+    output.push_back(currentNodeString);
+
+    // Print all child notes.
+    for (int i = 0; i < children.size(); i++) {
+        for (std::string &childStrings : printTreeRecursive(children[i])) {
+            output.push_back("\t" + childStrings);
+        }
+    }
+
+    // Return the string created.
+    return output;
+}
+
+std::vector<std::string> TreeNode::printTreeRecursive(TreeNode* current) {
+
+    // Helper vector, for each line one string.
+    std::vector<std::string> output;
+
+    // Print the current node.
+    std::string currentNodeString = std::to_string(current->getType());
+    std::vector<TreeNode*> kids = current->getChildren();
+    if (kids.size() > 0) {
+        currentNodeString += " ->";
+    }
+    output.push_back(currentNodeString);
+
+    // Print all child notes.
+    for (int i = 0; i < kids.size(); i++) {
+        for (std::string &childStrings : printTreeRecursive(kids[i])) {
+            output.push_back("\t" + childStrings);
+        }
+    }
+
+    // Return the string created.
+    return output;
 }
 
 void TreeNode::appendChildrenFromChild(TreeNode *node) {
@@ -45,4 +87,16 @@ void TreeNode::appendChildrenFromChild(TreeNode *node) {
 
 const vector<TreeNode *> &TreeNode::getChildren() const {
     return children;
+}
+
+Type TreeNode::getType() const {
+    return type;
+}
+
+const string &TreeNode::getValue() const {
+    return value;
+}
+
+double TreeNode::getNumber() const {
+    return number;
 }

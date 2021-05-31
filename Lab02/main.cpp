@@ -2,6 +2,10 @@
 #include <iostream>
 #include "driver.hh"
 #include "TreeNode.h"
+#include "vector"
+#include "iostream"
+
+using namespace std;
 
 
 int
@@ -17,6 +21,8 @@ main (int argc, char *argv[])
   drv.trace_scanning = true;
 
   drv.parse(drv.file);
-  drv.root->printTree();
+  vector<string> out = drv.root->printTree();
+  for (int i = 0; i < out.size(); ++i)
+      cout << out[i] << endl;
 }
 

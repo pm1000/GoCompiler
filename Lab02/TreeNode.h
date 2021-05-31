@@ -27,9 +27,14 @@ public:
 
     void addChild(TreeNode* node);
     void appendChildrenFromChild(TreeNode* node);
-    void printTree();
-
+    std::vector<std::string> printTree();
+    std::vector<std::string> printTreeRecursive(TreeNode* current);
     const vector<TreeNode *> &getChildren() const;
+
+    Type getType() const;
+    const string &getValue() const;
+    double getNumber() const;
+
 private:
     Type type;
     vector<TreeNode*> children;
