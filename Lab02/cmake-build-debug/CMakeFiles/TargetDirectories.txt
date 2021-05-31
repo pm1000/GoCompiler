@@ -1,3 +1,0 @@
-/home/yabr/hochschule/CompilerConstruction/Lab02/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/yabr/hochschule/CompilerConstruction/Lab02/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/yabr/hochschule/CompilerConstruction/Lab02/cmake-build-debug/CMakeFiles/Lab02.dir
