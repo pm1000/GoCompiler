@@ -2,7 +2,7 @@
 // Created by yabr on 16.05.21.
 //
 
-#include "TreeNode.h"
+#include "../Header/TreeNode.h"
 
 TreeNode *createTreeNode(tokenType type, string value) {
 

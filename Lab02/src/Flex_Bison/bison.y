@@ -4,8 +4,8 @@
 	#include <string>
 
 	#include "TreeNode.h"
-	#include "lexer.h"
 	#include "parser.h"
+	#include "lexer.h"
 
 	using namespace std;
 

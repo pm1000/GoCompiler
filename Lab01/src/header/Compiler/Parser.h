@@ -9,7 +9,7 @@
 
 #include "../Tree/Tree.h"
 #include "../Tree/BranchTree.h"
-#include "../../header/Tree/TokenTree.h"
+#include "../Tree/TokenTree.h"
 #include "../Tree/ScopeTree.h"
 
 class Parser {

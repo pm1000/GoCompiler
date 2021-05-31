@@ -2,16 +2,16 @@
 // Created by yabr on 16.05.21.
 //
 
-#include "parser.h"
-#include "lexer.h"
-#include "TreeNode.h"
+#include "Header/parser.h"
+#include "Header/lexer.h"
+#include "Header/TreeNode.h"
 #include <stdio.h>
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-int yyparse (TreeNode **treeNodeRoot, yyscan_t scanner);
+//int yyparse (TreeNode **treeNodeRoot, yyscan_t scanner);
 
 
 void evaluate(TreeNode *e)
