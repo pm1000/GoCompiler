@@ -5,6 +5,7 @@
 # include <cstdlib>
 # include <cstring> // strerror
 # include <string>
+# include <cfloat>
 # include "driver.hh"
 # include "parser.hh"
 %}
@@ -80,47 +81,54 @@
   make_NUMBER (const std::string &s, const yy::parser::location_type& loc);
 %}
 
-id    [a-zA-Z][a-zA-Z_0-9]*
-int   [0-9]+
-blank [ \t\r]
+delim   [ \t\n]
+ws      {delim}+
+letter  [A-Za-z]
+digit   [0-9]
+id      {letter}({letter}|{digit}|[_])*
+number  [+-]?{digit}+[.]?{digit}*
 
 %{
   // Code run each time a pattern is matched.
   # define YY_USER_ACTION  loc.columns (yyleng);
 %}
+
+
 %%
+
+
 %{
   // A handy shortcut to the location held by the driver.
   yy::location& loc = drv.location;
   // Code run each time yylex is called.
   loc.step ();
 %}
-{blank}+   loc.step ();
-\n+        loc.lines (yyleng); loc.step ();
-
-"-"        return yy::parser::make_MINUS  (loc);
-"+"        return yy::parser::make_PLUS   (loc);
-"*"        return yy::parser::make_STAR   (loc);
-"/"        return yy::parser::make_SLASH  (loc);
-"("        return yy::parser::make_LPAREN (loc);
-")"        return yy::parser::make_RPAREN (loc);
-":="       return yy::parser::make_ASSIGN (loc);
-
-{int}      return make_NUMBER (yytext, loc);
-{id}       return yy::parser::make_IDENTIFIER (yytext, loc);
+{ws}        loc.step ();
+package     return yy::parser::make_PACKAGE (loc);
+func        return yy::parser::make_FUNC (loc);
+var         return yy::parser::make_VAR (loc);
+"("         return yy::parser::make_LPAREN (loc);
+")"         return yy::parser::make_RPAREN (loc);
+"{"         return yy::parser::make_LCURLY (loc);
+"}"         return yy::parser::make_RCURLY (loc);
+"="         return yy::parser::make_ASSIGN (loc);
+";"         return yy::parser::make_SEMICOLON (loc);
+{number}    return make_NUMBER (yytext, loc);
+{id}        return yy::parser::make_IDENTIFIER (yytext, loc);
 .          {
-             throw yy::parser::syntax_error
-               (loc, "invalid character: " + std::string(yytext));
+                         throw yy::parser::syntax_error
+                           (loc, "invalid character: " + std::string(yytext));
 }
-<<EOF>>    return yy::parser::make_END (loc);
+<<EOF>>     return yy::parser::make_EOF (loc);
+
 %%
 
 yy::parser::symbol_type
 make_NUMBER (const std::string &s, const yy::parser::location_type& loc)
 {
   errno = 0;
-  long n = strtol (s.c_str(), NULL, 10);
-  if (! (INT_MIN <= n && n <= INT_MAX && errno != ERANGE))
+  double n = strtod (s.c_str(), NULL, 10);
+  if (! (DBL_MIN <= n && n <= DBL_MAX && errno != ERANGE))
     throw yy::parser::syntax_error (loc, "integer is out of range: " + s);
   return yy::parser::make_NUMBER ((int) n, loc);
 }

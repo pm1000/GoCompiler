@@ -4,6 +4,7 @@
 # include <string>
 # include <map>
 # include "parser.hh"
+# include "Tree/TreeNode.h"
 
 // Give Flex the prototype of yylex we want ...
 # define YY_DECL \
@@ -19,7 +20,7 @@ public:
 
   std::map<std::string, int> variables;
 
-  int result;
+  TreeNode* root;
 
   // Run the parser on file F.  Return 0 on success.
   int parse (const std::string& f);

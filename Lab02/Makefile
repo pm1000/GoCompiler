@@ -32,7 +32,7 @@ HEADERS=parser.hh scanner.hh
 
 calc++ : calc++.o scanner.o parser.o driver.o
 
-calc++.o : calc++.cc Header/driver.hh parser.hh
+calc++.o : main.cpp Header/driver.hh parser.hh
 
 %.o: %.cc
 	$(CC) $(CFLAGS) -o $@ -c $<

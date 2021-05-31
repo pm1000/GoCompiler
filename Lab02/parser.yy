@@ -26,43 +26,81 @@
 
 %define api.token.prefix {TOK_}
 %token
-  END  0  "end of file"
-  ASSIGN  ":="
-  MINUS   "-"
-  PLUS    "+"
-  STAR    "*"
-  SLASH   "/"
-  LPAREN  "("
-  RPAREN  ")"
+  EOF  0    "end of file"
+  ASSIGN    "="
+  LPAREN    "("
+  RPAREN    ")"
+  LCURLY    "{"
+  RCURLY    "}"
+  PACKAGE   "package"
+  FUNC      "func"
+  VAR       "var"
+  SEMICOLON ";"
 ;
 
-%token <std::string> IDENTIFIER "identifier"
-%token <int> NUMBER "number"
+%token <std::string> IDENTIFIER "id"
+%token <double> NUMBER "number"
 %nterm <int> exp
 
 %printer { yyo << $$; } <*>;
 
 %%
-%start unit;
-unit: assignments exp  { drv.result = $2; };
 
-assignments:
-  %empty                 {}
-| assignments assignment {};
+//appendChildrenFromChild
+%start START;
+START   :   PACKAGE_INCLUDE FUNCTIONS {TreeNode* node = new TreeNode(START);
+                                       node->addChild($1); node->appendChildrenFromChild($2);
+                                       drv.root = node;
+                                       };
 
-assignment:
-  "identifier" ":=" exp { drv.variables[$1] = $3; };
+PACKAGE_INCLUDE : "package" "id"  {TreeNode* node =  new TreeNode(PACKAGE_INCLUDE);
+                                   TreeNode* package = new TreeNode(PACKAGE);
+                                   TreeNode* id = new TreeNode(ID, $2);
+                                   node.push_back(package);
+                                   node.push_back(id);
+                                   $$ = node;
+                                   };
 
-%left "+" "-";
-%left "*" "/";
-exp:
-  "number"
-| "identifier"  { $$ = drv.variables[$1]; }
-| exp "+" exp   { $$ = $1 + $3; }
-| exp "-" exp   { $$ = $1 - $3; }
-| exp "*" exp   { $$ = $1 * $3; }
-| exp "/" exp   { $$ = $1 / $3; }
-| "(" exp ")"   { $$ = $2; }
+FUNCTIONS : FUNCTION FUNCTIONS {TreeNode * node = new TreeNode(FUNCTIONS);
+                                node->addChild($1);
+                                node->appendChildrenFromChild($2);
+                                $$ = node;
+                                }
+    | FUNCTION {$$ = $1};
+
+
+FUNCTION : "func" "id" "(" ")" SCOPE {TreeNode* node = new TreeNode(FUNCTION);
+                                        node->addChild(new TreeNode(FUNC));
+                                        node->addChild(new TreeNode(ID, $2));
+                                        node->addChild(new TreeNode(LPAREN));
+                                        node->addChild(new TreeNode(RPAREN));
+                                        node->addChild($5);
+                                        $$ = node;
+                                       };
+
+SCOPE : "{" EXPRESSIONS "}" {TreeNode* node = new TreeNode(SCOPE);
+                                node->addChild(new TreeNode(LCURLY));
+                                node->appendChildrenFromChild($2);
+                                node->addChild(new TreeNode(RCURLY));
+                                $$ = node;
+
+                             };
+
+EXPRESSIONS : EXPRESSION EXPRESSIONS {TreeNode* node = new TreeNode(EXPRESSIONS);
+                                       node->addChild($1);
+                                       node->appendChildrenFromChild($2);
+                                       $$ = node;
+                                       }
+    | EXPRESSION {$$ = $1};
+
+EXPRESSION : "var" "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION);
+                                      node->addChild(new TreeNode(VAR));
+                                      node->addChild(new TreeNode(ID, $2));
+                                      node->addChild(new TreeNode(ASSIGN));
+                                      node->addChild(new TreeNode(NUMBER, $4));
+                                      $$ = node;
+                                      };
+
 %%
 
 void

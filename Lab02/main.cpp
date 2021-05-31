@@ -1,64 +1,22 @@
-//
-// Created by yabr on 16.05.21.
-//
-
-#include "Header/parser.h"
-#include "Header/lexer.h"
-#include "Header/TreeNode.h"
-#include <stdio.h>
+// See https://www.gnu.org/software/bison/manual/html_node/Calc_002b_002b-Top-Level.html
 #include <iostream>
-#include <string>
-
-using namespace std;
-
-//int yyparse (TreeNode **treeNodeRoot, yyscan_t scanner);
+#include "driver.hh"
 
 
-void evaluate(TreeNode *e)
+int
+main (int argc, char *argv[])
 {
-    switch (e->type) {
-        case NUMBER: case ID: cout << e->value << endl; return;
-        default: for (TreeNode* tmp : e->children) { evaluate(tmp); }
-    }
+  int res = 0;
+  driver drv;
+  for (int i = 1; i < argc; ++i)
+    if (argv[i] == std::string ("-p"))
+      drv.trace_parsing = true;
+    else if (argv[i] == std::string ("-s"))
+      drv.trace_scanning = true;
+    else if (!drv.parse (argv[i]))
+        drv.root->printTree();
+    else
+      res = 1;
+  return res;
 }
 
-
-
-TreeNode *getAST(const char *expr)
-{
-    TreeNode *treeNodeRoot;
-    yyscan_t scanner;
-    YY_BUFFER_STATE state;
-
-    if (yylex_init(&scanner)) {
-        /* could not initialize */
-        return NULL;
-    }
-
-    state = yy_scan_string(expr, scanner);
-
-    if (yyparse(&treeNodeRoot, scanner)) {
-        /* error parsing */
-        return NULL;
-    }
-
-    yy_delete_buffer(state, scanner);
-
-    yylex_destroy(scanner);
-
-    return treeNodeRoot;
-}
-
-
-
-int main(void) {
-    char test[] = "package main\n"
-                  "\n"
-                  "func main(){\n"
-                  "\n"
-                  "}";
-    TreeNode *e = getAST(test);
-    evaluate(e);
-
-    return 0;
-}
