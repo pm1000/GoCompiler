@@ -31,6 +31,8 @@ YFLAGS=-v -d
 project : main.o scanner.o parser.o driver.o TreeNode.o
 	$(CC) -o $@ $^
 
+main.o: parser.hh parser.cc scanner.cc
+
 %.o: %.cpp
 	$(CC) $(CFLAGS) -o $@ -c $<
 
