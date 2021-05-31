@@ -1,6 +1,6 @@
 // See https://www.gnu.org/software/bison/manual/html_node/Calc_002b_002b-Top-Level.html
 #include <iostream>
-#include "../Header/driver.hh"
+#include "driver.hh"
 
 
 int

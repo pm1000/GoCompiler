@@ -17,8 +17,8 @@
 ####################################################################
 
 # Uncomment only one of the next two lines (choose your c++ compiler)
-# CC=g++
-CC=clang++
+CC=g++
+# CC=clang++
 
 LEX=flex
 YACC=bison
@@ -32,15 +32,15 @@ HEADERS=parser.hh scanner.hh
 
 calc++ : calc++.o scanner.o parser.o driver.o
 
-calc++.o : src/Body/calc++.cc Header/driver.hh parser.hh
+calc++.o : src/calc++.cc Header/driver.hh parser.hh
 
 %.o: %.cc
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-scanner.cc: src/Flex_Bison/scanner.ll
+scanner.cc: src/scanner.ll
 	$(LEX) $(LFLAGS) -o scanner.cc scanner.ll
 
-parser.cc parser.hh: src/Flex_Bison/parser.yy
+parser.cc parser.hh: src/parser.yy
 	$(YACC) $(YFLAGS) -o parser.cc parser.yy
 
 clean:
