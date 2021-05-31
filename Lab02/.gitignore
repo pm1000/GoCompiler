@@ -2,3 +2,11 @@
 cmake-build-*/
 outputFiles/created/
 .idea_modules/
+
+*.o
+*.output
+scanner.cc
+parser.cc
+parser.hh
+location.hh
+project

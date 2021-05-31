@@ -1,6 +1,7 @@
 // See https://www.gnu.org/software/bison/manual/html_node/Calc_002b_002b-Top-Level.html
 #include <iostream>
 #include "driver.hh"
+#include "TreeNode.h"
 
 
 int
@@ -8,15 +9,14 @@ main (int argc, char *argv[])
 {
   int res = 0;
   driver drv;
-  for (int i = 1; i < argc; ++i)
-    if (argv[i] == std::string ("-p"))
-      drv.trace_parsing = true;
-    else if (argv[i] == std::string ("-s"))
-      drv.trace_scanning = true;
-    else if (!drv.parse (argv[i]))
-        drv.root->printTree();
-    else
-      res = 1;
-  return res;
+
+  drv.file = "inputFiles/correct1.go";
+  cout << "Using File: " << drv.file << endl;
+
+  drv.trace_parsing = true;
+  drv.trace_scanning = true;
+
+  drv.parse(drv.file);
+  drv.root->printTree();
 }
 

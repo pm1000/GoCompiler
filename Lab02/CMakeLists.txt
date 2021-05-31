@@ -3,4 +3,4 @@ project(Lab02)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Lab02 main.cpp Tree/TreeNode.cpp Tree/TreeNode.h)
+add_executable(Lab02 main.cpp TreeNode.cpp TreeNode.h)

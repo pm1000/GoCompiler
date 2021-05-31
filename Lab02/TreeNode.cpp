@@ -25,7 +25,9 @@ TreeNode::~TreeNode() {
 }
 
 void TreeNode::addChild(TreeNode *node) {
-    this->children.push_back(node);
+    if (node) {
+        this->children.push_back(node);
+    }
 }
 
 void TreeNode::printTree() {
@@ -33,9 +35,11 @@ void TreeNode::printTree() {
 }
 
 void TreeNode::appendChildrenFromChild(TreeNode *node) {
-    vector<TreeNode*> kids = node->getChildren();
-    for (unsigned int i = 0; i < kids.size(); ++i){
-        children.push_back(kids[i]);
+    if (node) {
+        vector<TreeNode *> kids = node->getChildren();
+        for (unsigned int i = 0; i < kids.size(); ++i) {
+            children.push_back(kids[i]);
+        }
     }
 }
 

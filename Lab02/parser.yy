@@ -8,6 +8,8 @@
 %define parse.assert
 
 %code requires {
+  #include "TreeNode.h"
+  class TreeNode;
   # include <string>
   class driver;
 }
@@ -21,7 +23,7 @@
 %define parse.error verbose
 
 %code {
-# include "driver.hh"
+#include "driver.hh"
 }
 
 %define api.token.prefix {TOK_}
@@ -40,7 +42,13 @@
 
 %token <std::string> IDENTIFIER "id"
 %token <double> NUMBER "number"
-%nterm <int> exp
+%nterm <TreeNode*> START
+%nterm <TreeNode*> PACKAGE_INCLUDE
+%nterm <TreeNode*> FUNCTIONS
+%nterm <TreeNode*> FUNCTION
+%nterm <TreeNode*> SCOPE
+%nterm <TreeNode*> EXPRESSIONS
+%nterm <TreeNode*> EXPRESSION
 
 %printer { yyo << $$; } <*>;
 
@@ -56,8 +64,8 @@ START   :   PACKAGE_INCLUDE FUNCTIONS {TreeNode* node = new TreeNode(START);
 PACKAGE_INCLUDE : "package" "id"  {TreeNode* node =  new TreeNode(PACKAGE_INCLUDE);
                                    TreeNode* package = new TreeNode(PACKAGE);
                                    TreeNode* id = new TreeNode(ID, $2);
-                                   node.push_back(package);
-                                   node.push_back(id);
+                                   node->addChild(package);
+                                   node->addChild(id);
                                    $$ = node;
                                    };
 
@@ -66,7 +74,7 @@ FUNCTIONS : FUNCTION FUNCTIONS {TreeNode * node = new TreeNode(FUNCTIONS);
                                 node->appendChildrenFromChild($2);
                                 $$ = node;
                                 }
-    | FUNCTION {$$ = $1};
+    | FUNCTION {$$ = $1;};
 
 
 FUNCTION : "func" "id" "(" ")" SCOPE {TreeNode* node = new TreeNode(FUNCTION);
@@ -91,7 +99,8 @@ EXPRESSIONS : EXPRESSION EXPRESSIONS {TreeNode* node = new TreeNode(EXPRESSIONS)
                                        node->appendChildrenFromChild($2);
                                        $$ = node;
                                        }
-    | EXPRESSION {$$ = $1};
+    | EXPRESSION {$$ = $1;}
+    | %empty {};
 
 EXPRESSION : "var" "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION);
                                       node->addChild(new TreeNode(VAR));

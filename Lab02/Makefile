@@ -28,11 +28,11 @@ YFLAGS=-v -d
 #         parser.output which is nice to have (but not 
 #         strictly necessary).
 
-HEADERS=parser.hh scanner.hh
+project : main.o scanner.o parser.o driver.o TreeNode.o
+	$(CC) -o $@ $^
 
-calc++ : calc++.o scanner.o parser.o driver.o
-
-calc++.o : main.cpp Header/driver.hh parser.hh
+%.o: %.cpp
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 %.o: %.cc
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -46,7 +46,7 @@ parser.cc parser.hh: parser.yy
 clean:
 	$(RM) *~ *.o  calc++  scanner.cc parser.cc  scanner.hh parser.hh parser.output location.hh stack.hh position.hh
 
-tests: test.sh calc++
+tests: test.sh project
 	./test.sh
 
 # Alternative (directly on the command line):

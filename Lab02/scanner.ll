@@ -6,6 +6,7 @@
 # include <cstring> // strerror
 # include <string>
 # include <cfloat>
+# include "TreeNode.h"
 # include "driver.hh"
 # include "parser.hh"
 %}
@@ -127,7 +128,7 @@ yy::parser::symbol_type
 make_NUMBER (const std::string &s, const yy::parser::location_type& loc)
 {
   errno = 0;
-  double n = strtod (s.c_str(), NULL, 10);
+  double n = strtod (s.c_str(), nullptr);
   if (! (DBL_MIN <= n && n <= DBL_MAX && errno != ERANGE))
     throw yy::parser::syntax_error (loc, "integer is out of range: " + s);
   return yy::parser::make_NUMBER ((int) n, loc);
