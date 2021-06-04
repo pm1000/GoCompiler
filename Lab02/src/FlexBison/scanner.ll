@@ -6,8 +6,8 @@
 # include <cstring> // strerror
 # include <string>
 # include <cfloat>
-# include "TreeNode.h"
-# include "driver.hh"
+# include "../src/header/TreeNode.h"
+# include "../src/header/driver.hh"
 # include "parser.hh"
 %}
 

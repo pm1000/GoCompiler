@@ -8,7 +8,7 @@
 %define parse.assert
 
 %code requires {
-  #include "TreeNode.h"
+  #include "../src/header/TreeNode.h"
   class TreeNode;
   # include <string>
   class driver;
@@ -23,7 +23,7 @@
 %define parse.error verbose
 
 %code {
-#include "driver.hh"
+#include "../src/header/driver.hh"
 }
 
 %define api.token.prefix {TOK_}
@@ -91,7 +91,6 @@ SCOPE : "{" EXPRESSIONS "}" {TreeNode* node = new TreeNode(SCOPE);
                                 node->appendChildrenFromChild($2);
                                 node->addChild(new TreeNode(RCURLY));
                                 $$ = node;
-
                              };
 
 EXPRESSIONS : EXPRESSION EXPRESSIONS {TreeNode* node = new TreeNode(EXPRESSIONS);

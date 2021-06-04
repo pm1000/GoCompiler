@@ -3,4 +3,14 @@ project(Lab02)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Lab02 main.cpp TreeNode.cpp TreeNode.h)
+find_package(BISON REQUIRED)
+find_package(FLEX REQUIRED)
+
+bison_target(Parser src/FlexBison/parser.yy ${CMAKE_HOME_DIRECTORY}/FlexBisonOutput/parser.cc)
+flex_target(Scanner src/FlexBison/scanner.ll ${CMAKE_HOME_DIRECTORY}/FlexBisonOutput/scanner.cc)
+ADD_FLEX_BISON_DEPENDENCY(Scanner Parser)
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+
+add_executable(Lab02 src/body/main.cpp src/header/driver.hh src/body/driver.cc src/body/TreeNode.cpp src/header/TreeNode.h ${BISON_Parser_OUTPUTS} ${FLEX_Scanner_OUTPUTS})

@@ -36,7 +36,7 @@ public:
     double getNumber() const;
 
 private:
-    Type type;
+    enum Type type;
     vector<TreeNode*> children;
     string value;
     double number;

@@ -2,7 +2,7 @@
 // Created by philipp on 31.05.21.
 //
 
-#include "TreeNode.h"
+#include "../header/TreeNode.h"
 
 TreeNode::TreeNode(Type type, string value) {
     type = type;

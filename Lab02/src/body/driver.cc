@@ -1,6 +1,6 @@
 // See https://www.gnu.org/software/bison/manual/html_node/Calc_002b_002b-Parsing-Driver.html
-#include "driver.hh"
-#include "parser.hh"
+#include "../header/driver.hh"
+#include "../../FlexBisonOutput/parser.hh"
 
 driver::driver ()
   : trace_parsing (false), trace_scanning (false)

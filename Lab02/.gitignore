@@ -5,8 +5,5 @@ outputFiles/created/
 
 *.o
 *.output
-scanner.cc
-parser.cc
-parser.hh
-location.hh
+FlexBisonOutput/*
 project

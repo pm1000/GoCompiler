@@ -3,7 +3,7 @@
 # define DRIVER_HH
 # include <string>
 # include <map>
-# include "parser.hh"
+# include "../../FlexBisonOutput/parser.hh"
 # include "TreeNode.h"
 
 // Give Flex the prototype of yylex we want ...
