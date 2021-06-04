@@ -6,11 +6,10 @@
 using namespace std;
 
 
-int
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {
-  int res = 0;
   driver drv;
+  drv.root = new TreeNode(ID,"test");
 
   drv.file = "../inputFiles/correct1.go";
   cout << "Using File: " << drv.file << endl;

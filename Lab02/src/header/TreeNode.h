@@ -15,8 +15,9 @@ using std::vector;
 using std::string;
 
 enum Type{NUMBER = 0, PACKAGE = 1, FUNC = 2, VAR = 3, SEMICOLON = 4, ASSIGN = 5, LPAREN = 6, RPAREN = 7, LCURLY = 8,
-            RCURLY = 9, _EOF = 10, ID = 11, PACKAGE_INCLUDE = 100, START = 101, SCOPE = 102, EXPRESSION = 103,
-            FUNCTIONS = 104, FUNCTION = 105, EXPRESSIONS = 106};
+    RCURLY = 9, _EOF = 10, ID = 11, PACKAGE_INCLUDE = 100, START = 101, SCOPE = 102, EXPRESSION = 103,
+    FUNCTIONS = 104, FUNCTION = 105, EXPRESSIONS = 106};
+
 
 class TreeNode {
 public:
@@ -34,7 +35,7 @@ public:
     Type getType() const;
     const string &getValue() const;
     double getNumber() const;
-
+    string getTypeName();
 private:
     enum Type type;
     vector<TreeNode*> children;
