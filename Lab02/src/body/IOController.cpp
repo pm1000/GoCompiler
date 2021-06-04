@@ -11,7 +11,6 @@ IOController::~IOController() {
 
 }
 
-
 void IOController::start() {
 
     for (const auto &file : std::filesystem::directory_iterator(inputDirectory)){
