@@ -10,14 +10,13 @@
 #include "fstream"
 #include "CompileController.h"
 #include "TreeNode.h"
-#include "filesystem"
+#include <filesystem>
 
 class IOController {
 private:
     std::string inputDirectory;
     std::string outputDirectory;
 
-    std::string readFile(std::string path);
     std::vector<std::string> printTreeRecursive(TreeNode* current);
 
 public:

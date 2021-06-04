@@ -4,36 +4,70 @@
 
 #include "../header/CompileController.h"
 
+
+
+/**
+ *
+ */
 CompileController::CompileController() = default;
 
+
+
+/**
+ *
+ */
 CompileController::~CompileController() = default;
 
-void CompileController::init(std::string content) {
-    this->content = content;
+
+
+/**
+ *
+ */
+void CompileController::init(std::string filePath) {
+    this->filePath = filePath;
 }
 
+
+
+/**
+ *
+ */
 void CompileController::start() {
 
-    // Start Phase 1: Parser
-    Parser* p = new Parser(content);
-    try {
-        p->parse();
-    } catch (std::exception &e) {
-        std::cout << "[Parsing Error] Error while parsing: " << e.what() << std::endl << "This error occurred in line "
-        << p->getLine() << std::endl;
-    }
+    // ################################################################################
+    // Start Phase 1+2: Parser+Syntax
+    driver drv;
 
-    this->astRoot = p->getAstRoot();
-    this->symbolTableRoot = p->getSymbolTableRoot();
+    drv.file = this->filePath;
+    cout << "Using File: " << drv.file << endl;
 
-    delete p;
+    // Change logging
+    drv.trace_parsing = true;
+    drv.trace_scanning = true;
 
+    drv.parse(drv.file);
+    this->astRoot = drv.root;
+
+
+    // ################################################################################
+    // Start Phase 3: Semantic
+    // TODO
 }
 
+
+
+/**
+ *
+ */
 TreeNode *CompileController::getAstRoot() {
     return this->astRoot;
 }
 
+
+
+/**
+ *
+ */
 TreeNode *CompileController::getSymbolTableRoot() {
     return this->symbolTableRoot;
 }

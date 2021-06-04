@@ -11,43 +11,26 @@ IOController::~IOController() {
 
 }
 
-std::string IOController::readFile(std::string path) {
-
-    std::fstream file;
-    file.open(path, std::ios::in);
-
-    if (!file.is_open())
-        throw std::runtime_error("Unable to open the file " + inputDirectory + "/" + path);
-
-    std::string completeFile;
-    std::string line;
-    while(getline(file,line, '\n')){
-        completeFile += line + '\n';
-    }
-
-    file.close();
-    return completeFile;
-}
-
 
 void IOController::start() {
 
     for (const auto &file : std::filesystem::directory_iterator(inputDirectory)){
         // Log the current file
         std::cout << "Current File: " << file.path() << std::endl;
-        std::string input = readFile(file.path());
 
         // Start compiling
         CompileController* controller = new CompileController();
-        controller->init(input);
+        controller->init(file.path().string());
         controller->start();
 
-        // Prepare Console output
-        std::cout << "Abstract Syntax Tree:" << std::endl;
-        writeFile(controller->getAstRoot(), file.path().string(), "out_");
-        std::cout << "Symbol Table Tree:" << std::endl;
-        writeFile(controller->getSymbolTableRoot(), file.path().string(), "symbol_");
-        std::cout << std::endl << std::endl;
+        if (controller->getAstRoot()) {
+            // Prepare Console output
+            std::cout << "Abstract Syntax Tree:" << std::endl;
+            writeFile(controller->getAstRoot(), file.path().string(), "out_");
+            //std::cout << "Symbol Table Tree:" << std::endl;
+            //writeFile(controller->getSymbolTableRoot(), file.path().string(), "symbol_");
+            std::cout << std::endl << std::endl;
+        }
 
         // Remove controller
         delete controller;
@@ -78,21 +61,21 @@ void IOController::writeFile(TreeNode *tree, std::string fileName, std::string p
 }
 
 
-std::vector<std::string> IOController::printTreeRecursive(Tree* current) {
+std::vector<std::string> IOController::printTreeRecursive(TreeNode* current) {
 
     // Helper vector, for each line one string.
     std::vector<std::string> output;
 
     // Print the current node.
-    std::string currentNodeString = current->getName();
-    if (current->getChildrenSize() > 0) {
+    std::string currentNodeString = current->getTypeName();
+    if (current->getChildren().size() > 0) {
         currentNodeString += " ->";
     }
     output.push_back(currentNodeString);
 
     // Print all child notes.
-    for (int i = 0; i < current->getChildrenSize(); i++) {
-        for (std::string &childStrings : printTreeRecursive(current->getChildAt(i))) {
+    for (int i = 0; i < current->getChildren().size(); i++) {
+        for (std::string &childStrings : printTreeRecursive(current->getChildren().at(i))) {
             output.push_back("\t" + childStrings);
         }
     }

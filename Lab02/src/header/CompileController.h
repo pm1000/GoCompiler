@@ -10,10 +10,11 @@
 #include <iostream>
 
 #include "TreeNode.h"
+#include "../header/driver.hh"
 
 class CompileController {
 private:
-    std::string content = "";
+    std::string filePath = "";
     TreeNode* astRoot = nullptr;
     TreeNode* symbolTableRoot = nullptr;
 
