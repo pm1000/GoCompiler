@@ -28,7 +28,7 @@ YFLAGS=-v -d
 #         parser.output which is nice to have (but not 
 #         strictly necessary).
 
-project : scanner.o parser.o driver.o TreeNode.o main.o
+project : main.o scanner.o parser.o driver.o TreeNode.o
 	$(CC) -o $@ $^
 
 main.o: parser.hh parser.cc scanner.cc
