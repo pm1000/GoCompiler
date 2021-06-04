@@ -8,10 +8,8 @@
 using namespace std;
 
 
-int
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {
-  int res = 0;
   driver drv;
   drv.root = new TreeNode(ID,"test");
 
