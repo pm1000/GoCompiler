@@ -5,13 +5,13 @@
 #include "TreeNode.h"
 
 TreeNode::TreeNode(Type type, string value) {
-    type = type;
-    value = value;
+    this->type = type;
+    this->value = value;
 }
 
 TreeNode::TreeNode(Type type, double number) {
-    type = type;
-    number = number;
+    this->type = type;
+    this->number = number;
 }
 
 TreeNode::TreeNode(Type type) {
@@ -35,7 +35,7 @@ std::vector<std::string> TreeNode::printTree() {
     std::vector<std::string> output;
 
     // Print the current node.
-    std::string currentNodeString =  std::to_string(getType());
+    std::string currentNodeString = getTypeName();
     if (children.size() > 0) {
         currentNodeString += " ->";
     }
@@ -58,7 +58,7 @@ std::vector<std::string> TreeNode::printTreeRecursive(TreeNode* current) {
     std::vector<std::string> output;
 
     // Print the current node.
-    std::string currentNodeString = std::to_string(current->getType());
+    std::string currentNodeString = current->getTypeName();
     std::vector<TreeNode*> kids = current->getChildren();
     if (kids.size() > 0) {
         currentNodeString += " ->";
@@ -99,4 +99,55 @@ const string &TreeNode::getValue() const {
 
 double TreeNode::getNumber() const {
     return number;
+}
+
+/*
+ * enum Type{NUMBER = 0, PACKAGE = 1, FUNC = 2, VAR = 3, SEMICOLON = 4, ASSIGN = 5, LPAREN = 6, RPAREN = 7, LCURLY = 8,
+            RCURLY = 9, _EOF = 10, ID = 11, PACKAGE_INCLUDE = 100, START = 101, SCOPE = 102, EXPRESSION = 103,
+            FUNCTIONS = 104, FUNCTION = 105, EXPRESSIONS = 106};
+
+ */
+string TreeNode::getTypeName() {
+    switch (this->type) {
+        case NUMBER :
+            return "number: " + std::to_string(this->number);
+        case PACKAGE :
+            return "package";
+        case FUNC :
+            return "func";
+        case VAR :
+            return "var";
+        case SEMICOLON :
+            return "semicolon";
+        case ASSIGN :
+            return "assign";
+        case LPAREN :
+            return "lparen";
+        case RPAREN :
+            return "rparen";
+        case LCURLY :
+            return "lcurly";
+        case RCURLY :
+            return "rcurly";
+        case _EOF :
+            return "eof";
+        case ID :
+            return "id: " + this->value;
+        case PACKAGE_INCLUDE :
+            return "package_include";
+        case START :
+            return "start";
+        case SCOPE :
+            return "scope";
+        case EXPRESSION :
+            return "expression";
+        case FUNCTIONS :
+            return "functions";
+        case FUNCTION :
+            return "function";
+        case EXPRESSIONS :
+            return "expressions";
+        default :
+            return "error";
+    }
 }

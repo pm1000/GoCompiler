@@ -63,7 +63,7 @@ START   :   PACKAGE_INCLUDE FUNCTIONS {TreeNode* node = new TreeNode(START);
 
 PACKAGE_INCLUDE : "package" "id"  {TreeNode* node =  new TreeNode(PACKAGE_INCLUDE);
                                    TreeNode* package = new TreeNode(PACKAGE);
-                                   TreeNode* id = new TreeNode(ID, "$2");
+                                   TreeNode* id = new TreeNode(ID, $2);
                                    node->addChild(package);
                                    node->addChild(id);
                                    $$ = node;
@@ -108,7 +108,7 @@ EXPRESSION : "var" "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION);
                                       node->addChild(new TreeNode(ASSIGN));
                                       node->addChild(new TreeNode(NUMBER, $4));
                                       $$ = node;
-                                      };
+                                      }
 
 %%
 
