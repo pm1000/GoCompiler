@@ -5,5 +5,4 @@ outputFiles/created/
 
 *.o
 *.output
-FlexBisonOutput/*
 project
