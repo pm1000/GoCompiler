@@ -27,20 +27,23 @@ void IOController::start() {
         // Start compiling
         controller->start();
 
+        // Output the syntax tree
         if (controller->getAstRoot()) {
-
-            // Prepare Console output
             std::cout << "Abstract Syntax Tree:" << std::endl;
             writeFile(controller->getAstRoot(), file.path().string(), "out_");
-            std::cout << endl;
+        } else {
+            std::cout << "No abstract syntax tree available." << std::endl;
+        }
+        std::cout << endl;
+
+        // Output the symbol table
+        if (controller->getSymbolTableRoot()) {
             std::cout << "Symbol Table Tree:" << std::endl;
-            //writeFile(controller->getSymbolTableRoot(), file.path().string(), "symbol_");
             for (auto row : this->printSymbolTreeRecursive(controller->getSymbolTableRoot())) {
                 std::cout << row << endl;
             }
-
         } else {
-            std::cout << "No abstract syntax tree and symbol table available." << std::endl;
+            std::cout << "No symbal table available." << std::endl;
         }
         std::cout << std::endl << std::endl << endl;
 
