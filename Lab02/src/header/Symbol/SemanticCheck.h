@@ -21,7 +21,7 @@ public:
     SemanticCheck(TreeNode *ast);
     virtual ~SemanticCheck();
 
-    SymbolTree* checkTree();
+    void checkTree();
     SymbolTree *getSymbolTree() const;
 };
 

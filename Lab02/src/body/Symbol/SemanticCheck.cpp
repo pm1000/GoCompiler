@@ -12,7 +12,7 @@ SemanticCheck::~SemanticCheck() {
 
 }
 
-SymbolTree* SemanticCheck::checkTree() {
+void SemanticCheck::checkTree() {
     createScopeStructure(symbolTree,ast);
     vector<string> undecSym = scopeDfs(symbolTree);
 
