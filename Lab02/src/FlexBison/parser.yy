@@ -95,7 +95,7 @@ SCOPE : "{" EXPRESSIONS "}" {TreeNode* node = new TreeNode(SCOPE);
 
 EXPRESSIONS : EXPRESSION EXPRESSIONS {TreeNode* node = new TreeNode(EXPRESSIONS);
                                        node->addChild($1);
-                                       node->appendChildrenFromChild($2);
+                                       node->addChild($2);
                                        $$ = node;
                                        }
     | EXPRESSION {$$ = $1;}
