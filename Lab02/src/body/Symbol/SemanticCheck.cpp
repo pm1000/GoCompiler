@@ -21,7 +21,7 @@ void SemanticCheck::checkTree() {
         for (const auto& symbol : undecSym) {
             out += symbol + ", ";
         }
-        throw new std::runtime_error("Undeclared Symbols: " + out + " FIX IT!");
+        throw std::runtime_error("Undeclared Symbols: " + out + " FIX IT!");
     }
 }
 
@@ -67,11 +67,20 @@ void SemanticCheck::createScopeStructure(SymbolTree *sym, TreeNode *node) {
             if (node->getType() == EXPRESSION) {
                 id = node->getExpressionID();
                 declared = node->findChildType(VAR);
-                sym->putSymbol(id, SYM_VARIABLE, declared);
+                try {
+                    sym->putSymbol(id, SYM_VARIABLE, declared);
+                } catch (std::exception& e) {
+                    std::cerr << e.what() << endl;
+                }
+
             } else {
                 if (node->getType() == FUNCTION){
                     id = node->getFunctionID();
-                    sym->putSymbol(id, SYM_FUNCTION, true);
+                    try {
+                        sym->putSymbol(id, SYM_FUNCTION, true);
+                    } catch (std::exception& e) {
+                        std::cerr << e.what() << endl;
+                    }
                 }
 
                 vector<TreeNode *> kids = node->getChildren();
