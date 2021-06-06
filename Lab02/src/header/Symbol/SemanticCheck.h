@@ -6,7 +6,7 @@
 #define LAB02_SEMANTICCHECK_H
 
 
-#include "TreeNode.h"
+#include "../TreeNode.h"
 
 class SemanticCheck {
 private:

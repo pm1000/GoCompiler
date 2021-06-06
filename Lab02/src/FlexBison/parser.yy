@@ -38,6 +38,7 @@
   FUNC      "func"
   VAR       "var"
   SEMICOLON ";"
+  PLUS      "+"
 ;
 
 %token <std::string> IDENTIFIER "id"
@@ -98,6 +99,7 @@ EXPRESSIONS : EXPRESSION EXPRESSIONS {TreeNode* node = new TreeNode(EXPRESSIONS)
                                        node->addChild($2);
                                        $$ = node;
                                        }
+    | SCOPE EXPRESSIONS
     | EXPRESSION {$$ = $1;}
     | %empty {};
 
@@ -108,6 +110,11 @@ EXPRESSION : "var" "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION);
                                       node->addChild(new TreeNode(NUMBER, $4));
                                       $$ = node;
                                       }
+    | "id" "=" "id" "+" "number"
+    | "id" "=" "number" "+" "id"
+    | "id" "=" "number"
+    | "id" "=" "id"
+    | "id" "(" ")";
 
 %%
 

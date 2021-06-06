@@ -114,6 +114,7 @@ var         return yy::parser::make_VAR (loc);
 "}"         return yy::parser::make_RCURLY (loc);
 "="         return yy::parser::make_ASSIGN (loc);
 ";"         return yy::parser::make_SEMICOLON (loc);
+"+"         return yy::parser::make_PLUS (loc);
 {number}    return make_NUMBER (yytext, loc);
 {id}        return yy::parser::make_IDENTIFIER (yytext, loc);
 .          {

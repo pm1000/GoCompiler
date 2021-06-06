@@ -9,13 +9,20 @@
 
 using std::string;
 
-enum Type {};
+enum Type {START, FUNCTION, VARIABLE};
 
 class Symbol {
 private:
     string name;
     Type type;
+    bool declared;
 
+public:
+    Symbol(const string &name, Type type, bool declared);
+    virtual ~Symbol();
+
+    void setDeclared(bool declared);
+    bool isDeclared() const;
 };
 
 
