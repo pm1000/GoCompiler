@@ -147,6 +147,8 @@ string TreeNode::getTypeName() {
             return "function";
         case EXPRESSIONS :
             return "expressions";
+        case PACKAGE_NAME :
+            return "package_name: " + this->value;
         default :
             return "error";
     }
