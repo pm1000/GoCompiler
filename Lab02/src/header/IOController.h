@@ -11,12 +11,12 @@
 #include "CompileController.h"
 #include "TreeNode.h"
 #include <filesystem>
+#include "Symbol/SemanticCheck.h"
 
 class IOController {
 private:
     std::string inputDirectory;
     std::string outputDirectory;
-
     std::vector<std::string> printTreeRecursive(TreeNode* current);
 
 public:
