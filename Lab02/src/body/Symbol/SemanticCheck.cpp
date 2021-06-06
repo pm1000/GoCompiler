@@ -82,3 +82,7 @@ void SemanticCheck::createScopeStructure(SymbolTree *sym, TreeNode *node) {
         }
     }
 }
+
+SymbolTree *SemanticCheck::getSymbolTree() const {
+    return symbolTree;
+}

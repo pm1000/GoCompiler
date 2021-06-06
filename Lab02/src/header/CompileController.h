@@ -11,6 +11,8 @@
 
 #include "TreeNode.h"
 #include "../header/driver.hh"
+#include "Symbol/SymbolTree.h"
+#include "Symbol/SemanticCheck.h"
 
 class CompileController {
 private:
@@ -18,6 +20,7 @@ private:
     bool logging {false};
     TreeNode* astRoot = nullptr;
     TreeNode* symbolTableRoot = nullptr;
+    SymbolTree* symbolTable = nullptr;
 
 public:
     CompileController();

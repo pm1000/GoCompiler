@@ -22,6 +22,7 @@ public:
     virtual ~SemanticCheck();
 
     SymbolTree* checkTree();
+    SymbolTree *getSymbolTree() const;
 };
 
 

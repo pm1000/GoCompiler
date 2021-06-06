@@ -51,6 +51,15 @@ void CompileController::start() {
     // ################################################################################
     // Start Phase 3: Semantic
     // TODO
+    SemanticCheck* semanticCheck = new SemanticCheck(this->astRoot);
+    try {
+        semanticCheck->checkTree();
+        this->symbolTable = semanticCheck->getSymbolTree();
+    } catch (std::exception e){
+        std::cerr << e.what() << std::endl;
+    }
+
+    delete semanticCheck;
 }
 
 
