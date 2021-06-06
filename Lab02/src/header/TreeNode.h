@@ -33,6 +33,7 @@ public:
     const vector<TreeNode *> &getChildren() const;
     bool findChildType(Type t);
     string getExpressionID();
+    string getFunctionID();
 
     Type getType() const;
     const string &getValue() const;

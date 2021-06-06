@@ -167,3 +167,12 @@ string TreeNode::getExpressionID() {
     }
     return string();
 }
+
+string TreeNode::getFunctionID() {
+    if (type == FUNCTION)
+        for (int i = 0; i < children.size(); ++i){
+            if (children[i]->getType() == ID)
+                return children[i]->getValue();
+        }
+    return std::string();
+}

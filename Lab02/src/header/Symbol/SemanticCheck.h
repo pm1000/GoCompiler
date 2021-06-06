@@ -14,11 +14,9 @@ private:
     TreeNode* ast;
     SymbolTree* symbolTree;
 
-    void functionCheck(TreeNode* node, SymbolTree* symTree);
     vector<string> scopeDfs(SymbolTree* symTree);
-    SymbolTree* dFsFunc(TreeNode* root, SymbolTree* funcNode);
-
     void createScopeStructure(SymbolTree* sym, TreeNode* node);
+
 public:
     SemanticCheck(TreeNode *ast);
     virtual ~SemanticCheck();

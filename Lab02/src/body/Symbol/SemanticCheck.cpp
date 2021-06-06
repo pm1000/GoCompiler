@@ -13,13 +13,8 @@ SemanticCheck::~SemanticCheck() {
 }
 
 SymbolTree* SemanticCheck::checkTree() {
-    SymbolTree* funcNode = new SymbolTree("Functions");
-    SymbolTree* scopes = new SymbolTree("scopes");
-    symbolTree->addChild(funcNode);
-    symbolTree->addChild(scopes);
-    dFsFunc(ast, funcNode);
-    createScopeStructure(scopes,ast);
-    vector<string> undecSym = scopeDfs(scopes);
+    createScopeStructure(symbolTree,ast);
+    vector<string> undecSym = scopeDfs(symbolTree);
 
     if (undecSym.size() != 0){
         string out;
@@ -30,18 +25,6 @@ SymbolTree* SemanticCheck::checkTree() {
     }
 }
 
-SymbolTree* SemanticCheck::dFsFunc(TreeNode* root, SymbolTree* funcNode) {
-    if (root){
-        //important nodes: scope and function
-        if (root->getType() == FUNCTION){
-            functionCheck(root,funcNode);
-        }
-        vector<TreeNode*> kids = root->getChildren();
-        for (int i = 0; i < kids.size(); ++i){
-            dFsFunc(kids[i], funcNode);
-        }
-    }
-}
 
 vector<string> SemanticCheck::scopeDfs(SymbolTree* node) {
     vector<string> ret;
@@ -67,16 +50,6 @@ vector<string> SemanticCheck::scopeDfs(SymbolTree* node) {
     return ret;
 }
 
-void SemanticCheck::functionCheck(TreeNode *node, SymbolTree *symTree) {
-    if (node){
-        vector<TreeNode*> kids = node->getChildren();
-        for (int i = 0; i < kids.size(); ++i){
-            if (kids[i]->getType() == ID){
-                symTree->putSymbol(kids[i]->getValue(), SYM_FUNCTION, true);
-            }
-        }
-    }
-}
 
 void SemanticCheck::createScopeStructure(SymbolTree *sym, TreeNode *node) {
     if (node != nullptr){
@@ -96,6 +69,11 @@ void SemanticCheck::createScopeStructure(SymbolTree *sym, TreeNode *node) {
                 declared = node->findChildType(VAR);
                 sym->putSymbol(id, SYM_VARIABLE, declared);
             } else {
+                if (node->getType() == FUNCTION){
+                    id = node->getFunctionID();
+                    sym->putSymbol(id, SYM_FUNCTION, true);
+                }
+
                 vector<TreeNode *> kids = node->getChildren();
                 for (int i = 0; i < kids.size(); ++i) {
                     createScopeStructure(sym, kids[i]);
