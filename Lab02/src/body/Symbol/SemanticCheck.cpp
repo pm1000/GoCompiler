@@ -67,8 +67,12 @@ void SemanticCheck::createScopeStructure(SymbolTree *sym, TreeNode *node) {
             if (node->getType() == EXPRESSION) {
                 id = node->getExpressionID();
                 declared = node->findChildType(VAR);
+                bool func = node->findChildType(LPAREN);
                 try {
-                    sym->putSymbol(id, SYM_VARIABLE, declared);
+                    if (!func)
+                        sym->putSymbol(id, SYM_VARIABLE, declared);
+                    else
+                        sym->putSymbol(id, SYM_FUNCTION, declared);
                 } catch (std::exception& e) {
                     std::cerr << e.what() << endl;
                 }
