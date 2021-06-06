@@ -31,6 +31,8 @@ public:
 
     vector<string> getAllUndelaredSymbol();
     const vector<SymbolTree *> &getChildren() const;
+    const string &getScopeName() const;
+    vector<string> getTableEntries() const;
 };
 
 

@@ -21,3 +21,20 @@ bool Symbol::isDeclared() const {
 const string &Symbol::getName() const {
     return name;
 }
+
+string Symbol::toString() const {
+    return this->name + " from type " + this->getType();
+}
+
+string Symbol::getType() const {
+    switch (this->type) {
+        case SYM_FUNCTION:
+            return "function";
+        case SYM_START:
+            return "start";
+        case SYM_VARIABLE:
+            return "variable";
+        default:
+            return "ERROR! Type not defined.";
+    }
+}

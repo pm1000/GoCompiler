@@ -53,3 +53,26 @@ bool SymbolTree::containsDeclared(string name) {
     }
     return false;
 }
+
+
+
+/**
+ *
+ */
+const string &SymbolTree::getScopeName() const {
+    return scopeName;
+}
+
+
+
+/**
+ *
+ */
+vector<string> SymbolTree::getTableEntries() const {
+
+    vector<string> rows;
+    for (const auto& symbol : this->table) {
+        rows.push_back(symbol.second->toString());
+    }
+    return rows;
+}

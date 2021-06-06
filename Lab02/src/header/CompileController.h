@@ -19,7 +19,6 @@ private:
     std::string filePath = "";
     bool logging {false};
     TreeNode* astRoot = nullptr;
-    TreeNode* symbolTableRoot = nullptr;
     SymbolTree* symbolTable = nullptr;
 
 public:
@@ -32,7 +31,7 @@ public:
     void setLogging(bool value);
 
     TreeNode* getAstRoot();
-    TreeNode* getSymbolTableRoot();
+    SymbolTree* getSymbolTableRoot();
 
 };
 

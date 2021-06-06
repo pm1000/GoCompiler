@@ -24,6 +24,9 @@ public:
     const string &getName() const;
     void setDeclared(bool declared);
     bool isDeclared() const;
+
+    string toString() const;
+    string getType() const;
 };
 
 

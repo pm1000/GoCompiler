@@ -76,8 +76,8 @@ TreeNode *CompileController::getAstRoot() {
 /**
  *
  */
-TreeNode *CompileController::getSymbolTableRoot() {
-    return this->symbolTableRoot;
+SymbolTree *CompileController::getSymbolTableRoot() {
+    return this->symbolTable;
 }
 
 

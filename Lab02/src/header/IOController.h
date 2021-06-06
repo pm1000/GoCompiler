@@ -17,7 +17,8 @@ class IOController {
 private:
     std::string inputDirectory;
     std::string outputDirectory;
-    std::vector<std::string> printTreeRecursive(TreeNode* current);
+    std::vector<std::string> printAstTreeRecursive(TreeNode* current);
+    std::vector<std::string> printSymbolTreeRecursive(SymbolTree* current);
 
 public:
     IOController(const std::string &inputDirectory, const std::string &outputDirectory);

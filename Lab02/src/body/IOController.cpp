@@ -28,19 +28,21 @@ void IOController::start() {
         controller->start();
 
         if (controller->getAstRoot()) {
+
             // Prepare Console output
             std::cout << "Abstract Syntax Tree:" << std::endl;
             writeFile(controller->getAstRoot(), file.path().string(), "out_");
-            //std::cout << "Symbol Table Tree:" << std::endl;
+            std::cout << endl;
+            std::cout << "Symbol Table Tree:" << std::endl;
             //writeFile(controller->getSymbolTableRoot(), file.path().string(), "symbol_");
+            for (auto row : this->printSymbolTreeRecursive(controller->getSymbolTableRoot())) {
+                std::cout << row << endl;
+            }
+
         } else {
-            std::cout << "No abstract syntax tree available." << std::endl;
+            std::cout << "No abstract syntax tree and symbol table available." << std::endl;
         }
-
-        cout << "Symbol table: " << endl;
-
-
-        std::cout << std::endl << std::endl;
+        std::cout << std::endl << std::endl << endl;
 
         // Remove controller
         delete controller;
@@ -52,7 +54,7 @@ void IOController::writeFile(TreeNode *tree, std::string fileName, std::string p
 
     std::size_t pos = fileName.find_last_of('/');
     std::string newFileName = outputDirectory + prefix + fileName.substr(pos + 1, fileName.length() - pos - 3) + "txt";
-    std::vector<std::string> output = printTreeRecursive(tree);
+    std::vector<std::string> output = printAstTreeRecursive(tree);
     try {
         std::fstream file;
         file.open(newFileName, std::ios::out);
@@ -71,7 +73,7 @@ void IOController::writeFile(TreeNode *tree, std::string fileName, std::string p
 }
 
 
-std::vector<std::string> IOController::printTreeRecursive(TreeNode* current) {
+std::vector<std::string> IOController::printAstTreeRecursive(TreeNode* current) {
 
     // Helper vector, for each line one string.
     std::vector<std::string> output;
@@ -85,7 +87,37 @@ std::vector<std::string> IOController::printTreeRecursive(TreeNode* current) {
 
     // Print all child notes.
     for (int i = 0; i < current->getChildren().size(); i++) {
-        for (std::string &childStrings : printTreeRecursive(current->getChildren().at(i))) {
+        for (std::string &childStrings : printAstTreeRecursive(current->getChildren().at(i))) {
+            output.push_back(".\t" + childStrings);
+        }
+    }
+
+    // Return the string created.
+    return output;
+}
+
+
+
+std::vector<std::string> IOController::printSymbolTreeRecursive(SymbolTree* current) {
+
+    // Helper vector, for each line one string.
+    std::vector<std::string> output;
+
+    // Print the current node.
+    std::string currentNodeString = "[scope] " + current->getScopeName();
+    if (current->getChildren().size() > 0) {
+        currentNodeString += " ->";
+    }
+    output.push_back(currentNodeString);
+
+    // Append all table entries.
+    for (auto row : current->getTableEntries()) {
+        output.push_back(".\t[symbol] " + row);
+    }
+
+    // Print all child notes.
+    for (int i = 0; i < current->getChildren().size(); i++) {
+        for (std::string &childStrings : printSymbolTreeRecursive(current->getChildren().at(i))) {
             output.push_back(".\t" + childStrings);
         }
     }
