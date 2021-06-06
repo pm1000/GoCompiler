@@ -58,7 +58,7 @@
 //appendChildrenFromChild
 %start START;
 START   :   PACKAGE_INCLUDE FUNCTIONS {TreeNode* node = new TreeNode(START);
-                                       node->addChild($1); node->addChild($2);
+                                       node->addChild($1); node->appendChildrenFromChild($2);
                                        drv.root = node;
                                        };
 
@@ -72,10 +72,13 @@ PACKAGE_INCLUDE : "package" "id"  {TreeNode* node =  new TreeNode(PACKAGE_INCLUD
 
 FUNCTIONS : FUNCTION FUNCTIONS {TreeNode * node = new TreeNode(FUNCTION);
                                 node->addChild($1);
-                                node->addChild($2);
+                                node->appendChildrenFromChild($2);
                                 $$ = node;
                                 }
-    | FUNCTION {$$ = $1;};
+    | FUNCTION {TreeNode* node = new TreeNode(FUNCTIONS);
+                node->addChild($1);
+                $$ = node;
+                };
 
 
 FUNCTION : "func" "id" "(" ")" SCOPE {TreeNode* node = new TreeNode(FUNCTION);
@@ -96,11 +99,17 @@ SCOPE : "{" EXPRESSIONS "}" {TreeNode* node = new TreeNode(SCOPE);
 
 EXPRESSIONS : EXPRESSION EXPRESSIONS {TreeNode* node = new TreeNode(EXPRESSION);
                                        node->addChild($1);
-                                       node->addChild($2);
+                                       node->appendChildrenFromChild($2);
                                        $$ = node;
                                        }
-    | SCOPE EXPRESSIONS
-    | EXPRESSION {$$ = $1;}
+    | SCOPE EXPRESSIONS {TreeNode* node = new TreeNode(EXPRESSIONS);
+                         node->addChild($1);
+                         node->addChild($2);
+                         $$ = node;
+                         }
+    | EXPRESSION {TreeNode* node = new TreeNode(EXPRESSIONS);
+                  node->addChild($1);
+                  $$ = node;}
     | %empty {};
 
 EXPRESSION : "var" "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION);
@@ -110,11 +119,40 @@ EXPRESSION : "var" "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION);
                                       node->addChild(new TreeNode(NUMBER, $4));
                                       $$ = node;
                                       }
-    | "id" "=" "id" "+" "number"
-    | "id" "=" "number" "+" "id"
-    | "id" "=" "number"
-    | "id" "=" "id"
-    | "id" "(" ")";
+    | "id" "=" "id" "+" "number" {TreeNode* node = new TreeNode(EXPRESSION);
+                                  node->addChild(new TreeNode(ID, $1));
+                                  node->addChild(new TreeNode(ASSIGN));
+                                  node->addChild(new TreeNode(ID, $3));
+                                  node->addChild(new TreeNode(PLUS));
+                                  node->addChild(new TreeNode(NUMBER, $5));
+                                  $$ = node;
+                                  }
+    | "id" "=" "number" "+" "id" {TreeNode* node = new TreeNode(EXPRESSION);
+                                  node->addChild(new TreeNode(ID, $1));
+                                  node->addChild(new TreeNode(ASSIGN));
+                                  node->addChild(new TreeNode(NUMBER, $3));
+                                  node->addChild(new TreeNode(PLUS));
+                                  node->addChild(new TreeNode(ID, $5));
+                                  $$ = node;
+                                  }
+    | "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION);
+                         node->addChild(new TreeNode(ID, $1));
+                         node->addChild(new TreeNode(ASSIGN));
+                         node->addChild(new TreeNode(NUMBER, $3));
+                         $$ = node;
+                         }
+    | "id" "=" "id" {TreeNode* node = new TreeNode(EXPRESSION);
+                     node->addChild(new TreeNode(ID, $1));
+                     node->addChild(new TreeNode(ASSIGN));
+                     node->addChild(new TreeNode(ID, $3));
+                     $$ = node;
+                     }
+    | "id" "(" ")" {TreeNode* node = new TreeNode(EXPRESSION);
+                    node->addChild(new TreeNode(ID, $1));
+                    node->addChild(new TreeNode(LPAREN));
+                    node->addChild(new TreeNode(RPAREN));
+                    $$ = node;
+                    };
 
 %%
 
