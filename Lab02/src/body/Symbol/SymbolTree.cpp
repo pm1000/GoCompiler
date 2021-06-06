@@ -19,7 +19,7 @@ void SymbolTree::putSymbol(string name, SymbolType type, bool declared) {
         // error checking
         if (it->second->isDeclared() && declared){
             // error double declaration
-            throw new std::runtime_error("Double declaration of " + name + " please fix this:(. I can’t handle " +
+            throw std::runtime_error("Double declaration of " + name + " please fix this:(. I can’t handle " +
                                                                            "this error for you!");
         }
     }
