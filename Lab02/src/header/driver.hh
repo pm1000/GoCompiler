@@ -13,12 +13,9 @@
 YY_DECL;
 
 // Conducting the whole scanning and parsing of Calc++.
-class driver
-{
+class driver {
 public:
   driver ();
-
-  std::map<std::string, int> variables;
 
   TreeNode* root {nullptr};
 

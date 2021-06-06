@@ -152,4 +152,5 @@ void
 driver::scan_end ()
 {
   fclose (yyin);
+  yy_flush_buffer(*yy_buffer_stack);
 }

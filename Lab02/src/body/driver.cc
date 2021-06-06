@@ -2,16 +2,20 @@
 #include "../header/driver.hh"
 #include "../../FlexBisonOutput/parser.hh"
 
-driver::driver ()
-  : trace_parsing (false), trace_scanning (false)
-{
-  variables["one"] = 1;
-  variables["two"] = 2;
+
+/**
+ *
+ */
+driver::driver () : trace_parsing (false), trace_scanning (false) {
+
 }
 
-int
-driver::parse (const std::string &f)
-{
+
+
+/**
+ *
+ */
+int driver::parse (const std::string &f) {
   file = f;
   location.initialize (&file);
   scan_begin ();
