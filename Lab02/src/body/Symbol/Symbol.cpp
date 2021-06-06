@@ -23,7 +23,9 @@ const string &Symbol::getName() const {
 }
 
 string Symbol::toString() const {
-    return this->name + " from type " + this->getType();
+    string tmp = this->name + " from type " + this->getType() + ". ";
+    tmp += (this->declared) ? "Declared here." : "Not declared here.";
+    return tmp;
 }
 
 string Symbol::getType() const {
