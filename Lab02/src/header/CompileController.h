@@ -15,17 +15,18 @@
 class CompileController {
 private:
     std::string filePath = "";
+    bool logging {false};
     TreeNode* astRoot = nullptr;
     TreeNode* symbolTableRoot = nullptr;
 
 public:
     CompileController();
-
     virtual ~CompileController();
 
     void init(std::string content);
     void start();
 
+    void setLogging(bool value);
 
     TreeNode* getAstRoot();
     TreeNode* getSymbolTableRoot();

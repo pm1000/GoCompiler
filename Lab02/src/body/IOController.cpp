@@ -21,6 +21,11 @@ void IOController::start() {
         // Start compiling
         CompileController* controller = new CompileController();
         controller->init(file.path().string());
+
+        // logging options
+        controller->setLogging(false);
+
+        // Start compiling
         controller->start();
 
         if (controller->getAstRoot()) {
@@ -29,8 +34,10 @@ void IOController::start() {
             writeFile(controller->getAstRoot(), file.path().string(), "out_");
             //std::cout << "Symbol Table Tree:" << std::endl;
             //writeFile(controller->getSymbolTableRoot(), file.path().string(), "symbol_");
-            std::cout << std::endl << std::endl;
+        } else {
+            std::cout << "No abstract syntax tree available." << std::endl;
         }
+        std::cout << std::endl << std::endl;
 
         // Remove controller
         delete controller;

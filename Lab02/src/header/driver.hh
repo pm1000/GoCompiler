@@ -20,7 +20,7 @@ public:
 
   std::map<std::string, int> variables;
 
-  TreeNode* root;
+  TreeNode* root {nullptr};
 
   // Run the parser on file F.  Return 0 on success.
   int parse (const std::string& f);

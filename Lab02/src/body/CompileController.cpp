@@ -39,11 +39,10 @@ void CompileController::start() {
     driver drv;
 
     drv.file = this->filePath;
-    cout << "Using File: " << drv.file << endl;
 
     // Change logging
-    drv.trace_parsing = true;
-    drv.trace_scanning = true;
+    drv.trace_parsing = this->logging;
+    drv.trace_scanning = this->logging;
 
     drv.parse(drv.file);
     this->astRoot = drv.root;
@@ -70,4 +69,13 @@ TreeNode *CompileController::getAstRoot() {
  */
 TreeNode *CompileController::getSymbolTableRoot() {
     return this->symbolTableRoot;
+}
+
+
+
+/**
+ *
+ */
+void CompileController::setLogging(bool value) {
+    this->logging = value;
 }
