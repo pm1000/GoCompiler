@@ -82,7 +82,7 @@ std::vector<std::string> IOController::printTreeRecursive(TreeNode* current) {
     // Print all child notes.
     for (int i = 0; i < current->getChildren().size(); i++) {
         for (std::string &childStrings : printTreeRecursive(current->getChildren().at(i))) {
-            output.push_back("\t" + childStrings);
+            output.push_back(".\t" + childStrings);
         }
     }
 
