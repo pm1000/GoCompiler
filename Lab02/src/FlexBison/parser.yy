@@ -58,7 +58,7 @@
 //appendChildrenFromChild
 %start START;
 START   :   PACKAGE_INCLUDE FUNCTIONS {TreeNode* node = new TreeNode(START);
-                                       node->addChild($1); node->appendChildrenFromChild($2);
+                                       node->addChild($1); node->addChild($2);
                                        drv.root = node;
                                        };
 
@@ -70,9 +70,9 @@ PACKAGE_INCLUDE : "package" "id"  {TreeNode* node =  new TreeNode(PACKAGE_INCLUD
                                    $$ = node;
                                    };
 
-FUNCTIONS : FUNCTION FUNCTIONS {TreeNode * node = new TreeNode(FUNCTIONS);
+FUNCTIONS : FUNCTION FUNCTIONS {TreeNode * node = new TreeNode(FUNCTION);
                                 node->addChild($1);
-                                node->appendChildrenFromChild($2);
+                                node->addChild($2);
                                 $$ = node;
                                 }
     | FUNCTION {$$ = $1;};
@@ -94,7 +94,7 @@ SCOPE : "{" EXPRESSIONS "}" {TreeNode* node = new TreeNode(SCOPE);
                                 $$ = node;
                              };
 
-EXPRESSIONS : EXPRESSION EXPRESSIONS {TreeNode* node = new TreeNode(EXPRESSIONS);
+EXPRESSIONS : EXPRESSION EXPRESSIONS {TreeNode* node = new TreeNode(EXPRESSION);
                                        node->addChild($1);
                                        node->addChild($2);
                                        $$ = node;
