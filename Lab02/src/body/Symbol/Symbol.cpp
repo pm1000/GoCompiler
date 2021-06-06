@@ -4,7 +4,7 @@
 
 #include "../../header/Symbol/Symbol.h"
 
-Symbol::Symbol(const string &name, Type type, bool declared) : name(name), type(type), declared(declared) {}
+Symbol::Symbol(const string &name, SymbolType type, bool declared) : name(name), type(type), declared(declared) {}
 
 Symbol::~Symbol() {
 
@@ -16,4 +16,8 @@ void Symbol::setDeclared(bool declared) {
 
 bool Symbol::isDeclared() const {
     return declared;
+}
+
+const string &Symbol::getName() const {
+    return name;
 }

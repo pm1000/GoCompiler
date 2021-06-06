@@ -153,3 +153,28 @@ string TreeNode::getTypeName() {
             return "error";
     }
 }
+
+bool TreeNode::findChildType(Type t) {
+    for (int i = 0; i < children.size(); ++i)
+        if (t == children[i]->getType())
+            return true;
+    return false;
+}
+
+string TreeNode::getExpressionID() {
+    if (type == EXPRESSION){
+        for (int i = 0; i < children.size(); ++i)
+            if (children[i]->getType() == ID)
+                return children[i]->getValue();
+    }
+    return string();
+}
+
+string TreeNode::getFunctionID() {
+    if (type == FUNCTION)
+        for (int i = 0; i < children.size(); ++i){
+            if (children[i]->getType() == ID)
+                return children[i]->getValue();
+        }
+    return std::string();
+}

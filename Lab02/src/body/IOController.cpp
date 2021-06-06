@@ -36,10 +36,17 @@ void IOController::start() {
         } else {
             std::cout << "No abstract syntax tree available." << std::endl;
         }
+
+        cout << "Symbol table: " << endl;
+
+        SemanticCheck* semanticCheck = new SemanticCheck(controller->getAstRoot());
+        semanticCheck->checkTree();
+
         std::cout << std::endl << std::endl;
 
         // Remove controller
         delete controller;
+        delete semanticCheck;
     }
 
 }
