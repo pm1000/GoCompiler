@@ -13,13 +13,25 @@ IOController::~IOController() {
 
 void IOController::start() {
 
-    for (const auto &file : std::filesystem::directory_iterator(inputDirectory)){
+    // tmp!
+    std::vector<string> fileNames;
+    fileNames.push_back(inputDirectory + "correct1.go");
+    fileNames.push_back(inputDirectory + "correct2.go");
+    fileNames.push_back(inputDirectory + "correct3.go");
+    fileNames.push_back(inputDirectory + "correct4.go");
+    fileNames.push_back(inputDirectory + "incorrect1.go");
+    fileNames.push_back(inputDirectory + "incorrect2.go");
+    fileNames.push_back(inputDirectory + "incorrect3.go");
+    fileNames.push_back(inputDirectory + "incorrect4.go");
+
+
+    for (const auto &file : fileNames){
         // Log the current file
-        std::cout << "Current File: " << file.path() << std::endl;
+        std::cout << "Current File: " << file << std::endl;
 
         // Start compiling
         CompileController* controller = new CompileController();
-        controller->init(file.path().string());
+        controller->init(file);
 
         // logging options
         controller->setLogging(false);
@@ -30,7 +42,7 @@ void IOController::start() {
         // Output the syntax tree
         if (controller->getAstRoot()) {
             std::cout << "Abstract Syntax Tree:" << std::endl;
-            writeFile(controller->getAstRoot(), file.path().string(), "out_");
+            writeFile(controller->getAstRoot(), file, "out_");
         } else {
             std::cout << "No abstract syntax tree available." << std::endl;
         }
@@ -43,7 +55,7 @@ void IOController::start() {
                 std::cout << row << endl;
             }
         } else {
-            std::cout << "No symbal table available." << std::endl;
+            std::cout << "No symbol table available." << std::endl;
         }
         std::cout << std::endl << std::endl << endl;
 
