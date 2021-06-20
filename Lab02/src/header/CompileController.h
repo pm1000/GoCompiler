@@ -6,6 +6,19 @@
 #define Y_RASTER_A_COMPILECONTROLLER_H
 
 
+#include "llvm/Bitcode/BitcodeWriter.h"
+#include "llvm/IR/BasicBlock.h"
+#include "llvm/IR/Constants.h"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Function.h"
+#include "llvm/IR/InstrTypes.h"
+#include "llvm/IR/Instruction.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Type.h"
+#include "llvm/Support/raw_ostream.h"
+
 #include <string>
 #include <iostream>
 
@@ -14,12 +27,22 @@
 #include "Symbol/SymbolTree.h"
 #include "Symbol/SemanticCheck.h"
 
+using llvm::Module;
+using llvm::LLVMContext;
+using llvm::BasicBlock;
+using llvm::Function;
+
 class CompileController {
 private:
     std::string filePath = "";
     bool logging {false};
     TreeNode* astRoot = nullptr;
     SymbolTree* symbolTable = nullptr;
+    Module* module;
+    LLVMContext context;
+    void astDFS(TreeNode* node);
+    Function* buildFunc(TreeNode* parent, vector<TreeNode*> children, int* pos);
+    void buildScope(TreeNode* parent, vector<TreeNode*> children, int* pos, BasicBlock* current, Function* f);
 
 public:
     CompileController();

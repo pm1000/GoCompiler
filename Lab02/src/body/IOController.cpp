@@ -4,6 +4,7 @@
 
 #include "../header/IOController.h"
 
+
 IOController::IOController(const std::string &inputDirectory, const std::string &outputDirectory) : inputDirectory(
         inputDirectory), outputDirectory(outputDirectory) {}
 
