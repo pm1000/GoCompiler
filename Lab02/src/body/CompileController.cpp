@@ -107,7 +107,7 @@ void CompileController::astDFS(TreeNode *node) {
                 if (children[pos]->getType() == SCOPE) {
                     auto scopeKids = children[pos]->getChildren();
                     int scopePos = 0;
-                    buildScope(children[pos], scopeKids, &scopePos, nullptr);
+                    //buildScope(children[pos], scopeKids, &scopePos, nullptr);
                 }
             }
         }
