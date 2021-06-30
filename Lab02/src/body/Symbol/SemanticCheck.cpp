@@ -5,7 +5,7 @@
 #include "../../header/Symbol/SemanticCheck.h"
 
 SemanticCheck::SemanticCheck(TreeNode *ast) : ast(ast) {
-    this->symbolTree = new SymbolTree("SYM_START");
+    this->symbolTree = new SymbolTree("SYM_START", nullptr);
 }
 
 SemanticCheck::~SemanticCheck() {
@@ -44,7 +44,7 @@ vector<string> SemanticCheck::scopeDfs(SymbolTree* node) {
                 ++i;
         }
 
-        vector<string> tmp = node->getAllUndelaredSymbol();
+        vector<string> tmp = node->getAllUndeclaredSymbol();
         ret.insert(ret.end(),tmp.begin(), tmp.end());
     }
     return ret;
@@ -54,7 +54,8 @@ vector<string> SemanticCheck::scopeDfs(SymbolTree* node) {
 void SemanticCheck::createScopeStructure(SymbolTree *sym, TreeNode *node) {
     if (node != nullptr){
         if (node->getType() == SCOPE){
-            SymbolTree* subScope = new SymbolTree(node->getTypeName());
+            SymbolTree* subScope = new SymbolTree(node->getTypeName(), sym);
+            node->setSymbolTreeNode(subScope);
             sym->addChild(subScope);
             vector<TreeNode*> kids = node->getChildren();
             for (int i = 0; i < kids.size(); ++i){
@@ -99,3 +100,5 @@ void SemanticCheck::createScopeStructure(SymbolTree *sym, TreeNode *node) {
 SymbolTree *SemanticCheck::getSymbolTree() const {
     return symbolTree;
 }
+
+

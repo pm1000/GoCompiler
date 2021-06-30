@@ -178,3 +178,146 @@ string TreeNode::getFunctionID() {
         }
     return std::string();
 }
+
+int TreeNode::getExpressionType() const {
+    return expressionType;
+}
+
+void TreeNode::setExpressionType(int value) {
+    this->expressionType = value;
+}
+
+TreeNode *TreeNode::getAssignID() {
+    for (int i = 0; i < children.size(); ++i) {
+        if (children[i]->getType() == ID) {
+            //first id
+            return children[i];
+        }
+    }
+    return nullptr;
+}
+
+pair<TreeNode *, double> TreeNode::getExpID_Num() {
+
+    bool foundFirst = false;
+    pair<TreeNode*, double> p;
+    for (int i = 0; i < children.size(); ++i) {
+        if (children[i]->getType() == ID) {
+            if (!foundFirst)
+                foundFirst = !foundFirst;
+            else {
+                p.first = children[i];
+            }
+        }
+
+        if (children[i]->getType() == NUMBER) {
+            p.second = children[i]->getNumber();
+            break;
+        }
+    }
+
+    return p;
+}
+
+pair<double, TreeNode *> TreeNode::getExpNum_ID() {
+
+    bool foundFirst = false;
+    pair<double, TreeNode*> p;
+    for (int i = 0; i < children.size(); ++i) {
+        if (children[i]->getType() == ID) {
+            if (!foundFirst)
+                foundFirst = !foundFirst;
+            else {
+                p.second = children[i];
+                break;
+            }
+        }
+
+        if (children[i]->getType() == NUMBER) {
+            p.first = children[i]->getNumber();
+        }
+    }
+
+    return p;
+}
+
+pair<double, double> TreeNode::getExpNum_Num() {
+
+    pair<double, double> p;
+    bool foundFirst = false;
+
+    for (TreeNode* child : children) {
+        if (!foundFirst && child->getType() == NUMBER) {
+            p.first = child->getNumber();
+            foundFirst = true;
+        } else if (foundFirst && child->getType() == NUMBER) {
+            p.second = child->getNumber();
+            return p;
+        }
+    }
+
+    return p;
+}
+
+pair<TreeNode *, TreeNode *> TreeNode::getExpID_ID() {
+
+    // x = y+z --> y_z
+    pair<TreeNode *, TreeNode *> p;
+    bool foundFirst = false;
+
+    for (TreeNode* child : children) {
+        if (!foundFirst && child->getType() == ID) {
+            p.first = child;
+            foundFirst = true;
+        } else if (foundFirst && child->getType() == ID) {
+            p.second = child;
+            return p;
+        }
+    }
+
+    return p;
+}
+
+TreeNode *TreeNode::getExpID() {
+
+    bool foundFirst = false;
+    TreeNode* node = nullptr;
+    for (int i = 0; i < children.size(); ++i) {
+        if (children[i]->getType() == ID) {
+            if (!foundFirst)
+                foundFirst = !foundFirst;
+            else {
+                node = children[i];
+                break;
+            }
+        }
+    }
+
+    return node;
+}
+
+double TreeNode::getExpNum() {
+    bool foundFirst = false;
+    double value = 0.0;
+
+    for (int i = 0; i < children.size(); ++i) {
+        if (children[i]->getType() == NUMBER) {
+            if (!foundFirst)
+                foundFirst = !foundFirst;
+            else {
+                value = children[i]->getNumber();
+                break;
+            }
+        }
+    }
+
+    return number;
+}
+
+SymbolTree *TreeNode::getSymbolTreeNode() const {
+    return symbolTreeNode;
+}
+
+void TreeNode::setSymbolTreeNode(SymbolTree *symbolTreeNode) {
+    TreeNode::symbolTreeNode = symbolTreeNode;
+}
