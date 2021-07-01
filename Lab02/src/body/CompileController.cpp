@@ -159,7 +159,11 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                     TreeNode* assignNode = children[*pos]->getAssignID();
                     double value = children[*pos]->getExpNum();
 
-                    Value* val = llvm::ConstantFP::get(context, llvm::APFloat(value));
+                    Value* id = assignNode->getSymbolTreeNode()->getDeclaredSymbol(assignNode->getValue())->getValue();
+                    Value* number = llvm::ConstantFP::get(context, llvm::APFloat(value));
+
+                    llvm::Instruction* allocate = new llvm::AllocaInst(...); // TODO
+                    llvm::Instruction* assign = new llvm::StoreInst(number, id, current);
 
                 } break;
 
@@ -172,7 +176,7 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                     Value* id2 = p.first->getSymbolTreeNode()->getDeclaredSymbol(p.first->getValue())->getValue();
                     Value* number1 = llvm::ConstantFP::get(llvm::Type::getDoubleTy(context), p.second);
 
-                    Instruction* add = llvm::BinaryOperator::Create(Instruction::Add, id2, number1, "AddInstruction");
+                    llvm::BinaryOperator* add = llvm::BinaryOperator::Create(Instruction::Add, id2, number1, "AddInstruction");
                     current->getInstList().push_back(add);
 
 
