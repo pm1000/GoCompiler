@@ -9,14 +9,5 @@ Authors:
 
 Nice to know:
 
-- /docs             : contains the language description 
-- /inputFiles       : contains correct and incorrect test cases
-- /outputFiles      :
-    -  /expected    : expected output 
-    -  /created     : our programs output will be written in this directory (ideally it is the same content as in /expected)
-- /src              : contains all source code
-
-
-Don't dare to touch this text.
-
-You have been warned.
+- Lab01 got moved to the Lab01 folder.
+- Lab03 is based on Lab02 and is implemented in the Lab02 folder.
