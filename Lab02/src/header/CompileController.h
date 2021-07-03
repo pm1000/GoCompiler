@@ -44,7 +44,7 @@ private:
     LLVMContext context;
     void astDFS(TreeNode* node, SymbolTree* symbolTree);
     Function* buildFunc(TreeNode* parent, vector<TreeNode*> children, int* pos);
-    void buildScope(TreeNode* parent, vector<TreeNode*> children, int* pos, BasicBlock* current, Function* f);
+    void buildScope(TreeNode* parent, vector<TreeNode*> children, int* pos, BasicBlock* current, Function* f, bool outRec);
 
 public:
     CompileController();

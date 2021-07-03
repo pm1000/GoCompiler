@@ -114,18 +114,20 @@ void CompileController::astDFS(TreeNode *node, SymbolTree* symbolTree) {
                 Function* func = buildFunc(node, children, &pos); // automatically inserted in the function by using the module operator
 
                 //save func in symbol tree for future function calls
-                Symbol* fSym = symbolTree->getDeclaredSymbol(node->getValue());
+                cout << node->getAssignID()->getValue() << endl;
+                Symbol* fSym = symbolTree->getDeclaredSymbol(node->getAssignID()->getValue());
                 if (fSym == nullptr) {
                     std::cerr << "Error, unused symbol" << endl;
+                    exit(1);
                 }
-                //fSym->setFunc(func);
+                fSym->setFunc(func);
 
                 //after this scope needs to be opened
                 if (children[pos]->getType() == SCOPE) {
                     auto scopeKids = children[pos]->getChildren();
                     int scopePos = 0;
                     //complete function scope gets generated with recursive calls on build scope
-                    buildScope(children[pos], scopeKids, &scopePos, nullptr, func);
+                    buildScope(children[pos], scopeKids, &scopePos, nullptr, func, true);
                 }
             }
         } else {
@@ -151,7 +153,7 @@ Function* CompileController::buildFunc(TreeNode* parent, vector<TreeNode *> chil
 
 //creates a scope
 void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children, int *pos, BasicBlock *current,
-                                   Function* f) {
+                                   Function* f, bool outRec) {
     while (*pos < children.size()) {
 
         if (children[*pos]->getType() == LCURLY) {
@@ -170,11 +172,16 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
             auto kids = children[*pos]->getChildren();
             int subPos = 0;
             BasicBlock* nestedBlock = BasicBlock::Create(context,"Scope",f, current);
-            buildScope(children[*pos], kids, &subPos, nestedBlock, f);
+            buildScope(children[*pos], kids, &subPos, nestedBlock, f, false);
         }
 
         if (children[*pos]->getType() == RCURLY) {
             cout << "Scope closed" << endl;
+
+            if (outRec) {
+                llvm::Instruction* ret = llvm::ReturnInst::Create(context, nullptr, current);
+            }
+
             return;
         }
 
@@ -197,7 +204,6 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
 
                     Value* number = llvm::ConstantFP::get(context, llvm::APFloat(value));
 
-                    //todo check if variable is already allocated
                     Symbol* symbol = symNode->getDeclaredSymbol(assignNode->getValue());
                     auto assignVar = symbol->getAlloc();
                     if (assignVar == nullptr) {
@@ -230,12 +236,12 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                     current->getInstList().push_back(add);
 
                     Symbol* id1 = symNode->getDeclaredSymbol(assign->getValue());
-                    if (id2 == nullptr) {
+                    if (id1 == nullptr) {
                         std::cerr << "Error, use of undeclared Symbol" << endl;
                         exit(1);
                     }
 
-                    llvm::Instruction* store = new llvm::StoreInst(add,id1->getValue(),current);
+                    llvm::Instruction* store = new llvm::StoreInst(add,id1->getAlloc(),current);
 
                 } break;
 
@@ -258,12 +264,12 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                     current->getInstList().push_back(add);
 
                     Symbol* id1 = symNode->getDeclaredSymbol(assign->getValue());
-                    if (id2 == nullptr) {
+                    if (id1 == nullptr) {
                         std::cerr << "Error, use of undeclared Symbol" << endl;
                         exit(1);
                     }
 
-                    llvm::Instruction* store = new llvm::StoreInst(add,id1->getValue(),current);
+                    llvm::Instruction* store = new llvm::StoreInst(add,id1->getAlloc(),current);
                 } break;
 
                 //id = number --> zuweisung
@@ -296,13 +302,14 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                         std::cerr << "Error, use of undeclared symbol" << endl;
                         exit(1);
                     }
+
                     llvm::Instruction* assign = new llvm::StoreInst(assignedVal->getAlloc(), assignSym->getAlloc(), current);
 
                 } break;
 
                 case 5 : {
                     //todo function call
-                    /*
+
                     TreeNode* funcID = children[*pos]->getExpFuncID();
                     SymbolTree* symNode = children[*pos]->getSymbolTreeNode();
 
@@ -313,9 +320,8 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                     }
 
                     std::vector<Value*> emptyArgs;
-                    //auto funcCall = llvm::CallInst::Create(func->getValue(), makeArrayRef(emptyArgs));
-                    llvm::Instruction* fCall = llvm::CallInst::Create( func->getFunc(), emptyArgs, "call", current);
-                     */
+                    llvm::Instruction* fCall = llvm::CallInst::Create(func->getFunc(), emptyArgs, "call", current);
+
                 } break;
 
 
@@ -330,4 +336,3 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
         *pos = *pos + 1;
     }
 }
-

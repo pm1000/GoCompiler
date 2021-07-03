@@ -88,6 +88,7 @@ void SemanticCheck::createScopeStructure(SymbolTree *sym, TreeNode *node) {
             } else {
                 if (node->getType() == FUNCTION){
                     id = node->getFunctionID();
+                    cout << id << endl;
                     try {
                         sym->putSymbol(id, SYM_FUNCTION, true);
 
