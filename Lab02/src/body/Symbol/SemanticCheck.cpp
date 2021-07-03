@@ -55,7 +55,14 @@ void SemanticCheck::createScopeStructure(SymbolTree *sym, TreeNode *node) {
     if (node != nullptr){
         if (node->getType() == SCOPE){
             SymbolTree* subScope = new SymbolTree(node->getTypeName(), sym);
+
+            //set symbol tree node for scope node and its children (needed for code generation)
             node->setSymbolTreeNode(subScope);
+            auto children = node->getChildren();
+            for (int i = 0; i < children.size(); ++i) {
+                children[i]->setSymbolTreeNode(subScope);
+            }
+
             sym->addChild(subScope);
             vector<TreeNode*> kids = node->getChildren();
             for (int i = 0; i < kids.size(); ++i){

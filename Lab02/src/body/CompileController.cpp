@@ -124,7 +124,7 @@ void CompileController::astDFS(TreeNode *node, SymbolTree* symbolTree) {
             //if it is not a function call the function recusively
             auto children = node->getChildren();
             for (int i = 0; i < children.size(); ++i) {
-                astDFS(children[i], symbolTree);
+                astDFS(children[i], children[i]->getSymbolTreeNode());
             }
         }
     }
@@ -178,35 +178,49 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
             //id = number --> zuweisung 3
             //id = id --> zuweisung 4
 
+            auto debug = children[*pos]->getExpressionType();
             switch (children[*pos]->getExpressionType()) {
 
                 //var id = number --> zuweisung
                 case 0 : {
                     TreeNode* assignNode = children[*pos]->getAssignID();
                     double value = children[*pos]->getExpNum();
+                    SymbolTree* symNode = children[*pos]->getSymbolTreeNode();
 
-                    Value* id = assignNode->getSymbolTreeNode()->getDeclaredSymbol(assignNode->getValue())->getValue();
+                    Value* id = symNode->getDeclaredSymbol(assignNode->getValue())->getValue();
                     Value* number = llvm::ConstantFP::get(context, llvm::APFloat(value));
 
-                    //llvm::Instruction* allocate = new llvm::AllocaInst(...); // TODO
-                    llvm::Instruction* assign = new llvm::StoreInst(number, id, current);
+                    //todo check if variable is already allocated
+                    Symbol* symbol = symNode->getDeclaredSymbol(assignNode->getValue());
+                    auto assignVar = symbol->getAlloc();
+                    if (assignVar == nullptr) {
+                        // new allocation needed
+                        symbol->setAlloc(new llvm::AllocaInst(llvm::Type::getFP128Ty(context), 0,
+                                                       assignNode->getValue(), current));
+                    }
+                    llvm::Instruction* assign = new llvm::StoreInst(number, symbol->getAlloc(), current);
+
 
                 } break;
 
+                /*
                 //id1 = id2 + number --> addition + zuweisung
                 case 1 : {
 
+                    SymbolTree* symNode = children[*pos]->getSymbolTreeNode();
                     TreeNode* assign = children[*pos]->getAssignID(); //id1
                     pair<TreeNode*, double> p = children[*pos]->getExpID_Num(); //id2, number
 
-                    Value* id2 = p.first->getSymbolTreeNode()->getDeclaredSymbol(p.first->getValue())->getValue();
+                    Value* id2 = symNode->getDeclaredSymbol(p.first->getValue())->getValue();
                     Value* number1 = llvm::ConstantFP::get(llvm::Type::getDoubleTy(context), p.second);
 
                     llvm::BinaryOperator* add = llvm::BinaryOperator::Create(Instruction::Add, id2, number1, "AddInstruction");
                     current->getInstList().push_back(add);
 
 
-                    //p.first->getSymbolTreeNode()->getDeclaredSymbol(p.first->getValue())->setVal();
+                    Value* id1 = symNode->getDeclaredSymbol(assign->getValue())->getValue();
+                    //id1 = add;
+                    //llvm::Instruction* a = new llvm::StoreInst(add,id1,current);
 
                 } break;
 
@@ -230,7 +244,7 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                     std::cerr << "Wenn du das hier siehst, ist etwas grundlegend falsch gelaufen. Denke bitte nochmal drüber"
                             " nach, ob Informatik das richtige für dich ist!"<< endl;
                     exit(1);
-                }
+                } */
             }
         }
 

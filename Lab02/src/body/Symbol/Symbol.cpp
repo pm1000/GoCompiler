@@ -4,7 +4,12 @@
 
 #include "../../header/Symbol/Symbol.h"
 
-Symbol::Symbol(const string &name, SymbolType type, bool declared) : name(name), type(type), declared(declared) {}
+Symbol::Symbol(const string &name, SymbolType type, bool declared) {
+        this->name = name;
+        this->type = type;
+        this->declared = declared;
+        this->alloc = nullptr;
+}
 
 Symbol::~Symbol() {
 
@@ -51,4 +56,12 @@ void Symbol::getVal(double value, LLVMContext context) {
 
 void Symbol::setVal(Value *value) {
     this->val = value;
+}
+
+llvm::AllocaInst *Symbol::getAlloc() const {
+    return alloc;
+}
+
+void Symbol::setAlloc(llvm::AllocaInst *alloc) {
+    Symbol::alloc = alloc;
 }

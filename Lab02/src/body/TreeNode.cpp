@@ -302,16 +302,12 @@ double TreeNode::getExpNum() {
 
     for (int i = 0; i < children.size(); ++i) {
         if (children[i]->getType() == NUMBER) {
-            if (!foundFirst)
-                foundFirst = !foundFirst;
-            else {
-                value = children[i]->getNumber();
-                break;
-            }
+            value = children[i]->getNumber();
+            break;
         }
     }
 
-    return number;
+    return value;
 }
 
 SymbolTree *TreeNode::getSymbolTreeNode() const {

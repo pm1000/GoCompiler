@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(Lab02)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)

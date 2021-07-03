@@ -37,6 +37,7 @@ private:
     SymbolType type;
     bool declared;
     Value* val;
+    llvm::AllocaInst* alloc;
 
 public:
     Symbol(const string &name, SymbolType type, bool declared);
@@ -52,6 +53,8 @@ public:
     Value *getValue() const;
     void getVal(double value, LLVMContext context);
     void setVal(Value* value);
+    llvm::AllocaInst *getAlloc() const;
+    void setAlloc(llvm::AllocaInst *alloc);
 
 };
 
