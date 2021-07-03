@@ -62,6 +62,7 @@ private:
     double number;
     TreeNode* parent;
     SymbolTree* symbolTreeNode;
+    int expressionType;
 };
 
 

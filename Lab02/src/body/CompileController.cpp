@@ -58,7 +58,7 @@ void CompileController::start() {
         //code generation
         LLVMContext context;
         module = new Module(this->filePath, context);
-        astDFS(this->astRoot);
+        astDFS(this->astRoot, this->symbolTable);
         module->print(llvm::errs(), nullptr);
 
     } catch (std::exception& e){
@@ -124,7 +124,7 @@ void CompileController::astDFS(TreeNode *node, SymbolTree* symbolTree) {
             //if it is not a function call the function recusively
             auto children = node->getChildren();
             for (int i = 0; i < children.size(); ++i) {
-                astDFS(children[i]);
+                astDFS(children[i], symbolTree);
             }
         }
     }
@@ -188,7 +188,7 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                     Value* id = assignNode->getSymbolTreeNode()->getDeclaredSymbol(assignNode->getValue())->getValue();
                     Value* number = llvm::ConstantFP::get(context, llvm::APFloat(value));
 
-                    llvm::Instruction* allocate = new llvm::AllocaInst(...); // TODO
+                    //llvm::Instruction* allocate = new llvm::AllocaInst(...); // TODO
                     llvm::Instruction* assign = new llvm::StoreInst(number, id, current);
 
                 } break;
@@ -206,7 +206,7 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                     current->getInstList().push_back(add);
 
 
-                    p.first->getSymbolTreeNode()->getDeclaredSymbol(p.first->getValue())->setVal();
+                    //p.first->getSymbolTreeNode()->getDeclaredSymbol(p.first->getValue())->setVal();
 
                 } break;
 

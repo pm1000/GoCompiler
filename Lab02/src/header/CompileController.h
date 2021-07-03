@@ -5,22 +5,6 @@
 #ifndef Y_RASTER_A_COMPILECONTROLLER_H
 #define Y_RASTER_A_COMPILECONTROLLER_H
 
-//#include "llvm/Linker.h"
-//#include "llvm/System/Program.h"
-//#include "llvm/Module.h"
-//#include "llvm/PassManager.h"
-//#include "llvm/Bytecode/Reader.h"
-//#include "llvm/Bytecode/Writer.h"
-//#include "llvm/Target/TargetData.h"
-#include "llvm/Target/TargetMachine.h"
-//#include "llvm/Target/TargetMachineRegistry.h"
-#include "llvm/Support/CommandLine.h"
-#include "llvm/Support/FileUtilities.h"
-#include "llvm/Support/SystemUtils.h"
-//#include "llvm/System/Signals.h"
-#include <fstream>
-#include <iostream>
-#include <memory>
 #include "llvm/Bitcode/BitcodeWriter.h"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constants.h"
