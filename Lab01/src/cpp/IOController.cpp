@@ -48,7 +48,6 @@ void IOController::start() {
         std::cout << "Symbol Table Tree:" << std::endl;
         writeFile(controller->getSymbolTableRoot(), file.path().string(), "symbol_");
         std::cout << std::endl << std::endl;
-
         // Remove controller
         delete controller;
     }

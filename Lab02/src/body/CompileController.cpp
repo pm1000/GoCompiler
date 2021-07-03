@@ -58,6 +58,8 @@ void CompileController::start() {
         //code generation
         LLVMContext context;
         module = new Module(this->filePath, context);
+        astDFS(this->astRoot);
+        module->print(llvm::errs(), nullptr);
 
     } catch (std::exception& e){
         std::cerr << e.what() << std::endl;
@@ -94,21 +96,34 @@ void CompileController::setLogging(bool value) {
 }
 
 void CompileController::astDFS(TreeNode *node) {
+
+    //function gets called recursively --> check for nullptr
     if (node != nullptr) {
+
+        //if node is function
         if (node->getType() == FUNCTION) {
             auto children = node->getChildren();
             if (children.size() == 0) {
+                //error if function node has no children
                 std::cerr <<"Expected a function" << endl;
                 node = nullptr;
             } else {
                 //build function def
                 int pos = 0;
-                Function* func = buildFunc(node, children, &pos);
+                Function* func = buildFunc(node, children, &pos); // automatically inserted in the function by using the module operator
+                //after this scope needs to be opened
                 if (children[pos]->getType() == SCOPE) {
                     auto scopeKids = children[pos]->getChildren();
                     int scopePos = 0;
-                    //buildScope(children[pos], scopeKids, &scopePos, nullptr);
+                    //complete function scope gets generated with recursive calls on build scope
+                    buildScope(children[pos], scopeKids, &scopePos, nullptr, func);
                 }
+            }
+        } else {
+            //if it is not a function call the function recusively
+            auto children = node->getChildren();
+            for (int i = 0; i < children.size(); ++i) {
+                astDFS(children[i]);
             }
         }
     }
@@ -120,6 +135,7 @@ Function* CompileController::buildFunc(TreeNode* parent, vector<TreeNode *> chil
     while (*pos < children.size() && children[*pos]->getType() != SCOPE) {
         *pos = *pos + 1;
     }
+    cout << "Found func" << endl;
     return llvm::Function::Create(funcType, llvm::Function::ExternalLinkage, id, module);
 }
 
@@ -131,19 +147,28 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
             if (current == nullptr) {
                 //standart block
                 current = BasicBlock::Create(context, "Scope",f);
+                cout << "Scope opened" << endl;
             } else {
                 //nested blocks
-                BasicBlock* nestedBlock = BasicBlock::Create(context,"Scope",f, current);
-                buildScope(parent, children, pos, nestedBlock, f);
+                cout << "Scope opened" << endl;
             }
         }
 
+        if (children[*pos]->getType() == SCOPE) {
+            //nested block gets opened
+            auto kids = children[*pos]->getChildren();
+            int subPos = 0;
+            BasicBlock* nestedBlock = BasicBlock::Create(context,"Scope",f, current);
+            buildScope(children[*pos], kids, &subPos, nestedBlock, f);
+        }
+
         if (children[*pos]->getType() == RCURLY) {
+            cout << "Scope closed" << endl;
             return;
         }
 
         if (children[*pos]->getType() == EXPRESSION) {
-
+            cout << "Expression" << endl;
         }
 
         *pos = *pos + 1;
