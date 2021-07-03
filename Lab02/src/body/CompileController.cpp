@@ -114,7 +114,6 @@ void CompileController::astDFS(TreeNode *node, SymbolTree* symbolTree) {
                 Function* func = buildFunc(node, children, &pos); // automatically inserted in the function by using the module operator
 
                 //save func in symbol tree for future function calls
-                cout << node->getAssignID()->getValue() << endl;
                 Symbol* fSym = symbolTree->getDeclaredSymbol(node->getAssignID()->getValue());
                 if (fSym == nullptr) {
                     std::cerr << "Error, unused symbol" << endl;
@@ -308,7 +307,6 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                 } break;
 
                 case 5 : {
-                    //todo function call
 
                     TreeNode* funcID = children[*pos]->getExpFuncID();
                     SymbolTree* symNode = children[*pos]->getSymbolTreeNode();
