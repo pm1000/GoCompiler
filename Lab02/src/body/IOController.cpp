@@ -16,7 +16,7 @@ void IOController::start() {
 
     // tmp!
     std::vector<string> fileNames;
-    fileNames.push_back("/home/philipp/Documents/Compilerbau/Y-Raster-A/Lab02/inputFiles/correct4.go");
+    fileNames.push_back(inputDirectory + "correct4.go");
     /*fileNames.push_back(inputDirectory + "correct1.go");
     fileNames.push_back(inputDirectory + "correct2.go");
     fileNames.push_back(inputDirectory + "correct3.go");
