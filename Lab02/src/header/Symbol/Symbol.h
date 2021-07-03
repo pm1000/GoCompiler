@@ -38,6 +38,7 @@ private:
     bool declared;
     Value* val;
     llvm::AllocaInst* alloc;
+    llvm::Function* func;
 
 public:
     Symbol(const string &name, SymbolType type, bool declared);
@@ -55,7 +56,8 @@ public:
     void setVal(Value* value);
     llvm::AllocaInst *getAlloc() const;
     void setAlloc(llvm::AllocaInst *alloc);
-
+    Function *getFunc() const;
+    void setFunc(Function *func);
 };
 
 

@@ -18,6 +18,12 @@ TreeNode::TreeNode(Type type) {
     this->type = type;
 }
 
+TreeNode::TreeNode(Type type, int expID) {
+    this->type = type;
+    this->expressionType = expID;
+}
+
+
 TreeNode::~TreeNode() {
     for (unsigned int i = 0; i < children.size(); ++i){
         delete children[i];
@@ -316,4 +322,14 @@ SymbolTree *TreeNode::getSymbolTreeNode() const {
 
 void TreeNode::setSymbolTreeNode(SymbolTree *symbolTreeNode) {
     TreeNode::symbolTreeNode = symbolTreeNode;
+}
+
+TreeNode *TreeNode::getExpFuncID() {
+    for (int i = 0; i < children.size(); ++i) {
+        if (children[i]->getType() == ID) {
+            return children[i];
+        }
+    }
+
+    return nullptr;
 }

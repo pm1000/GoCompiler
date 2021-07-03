@@ -9,6 +9,7 @@ Symbol::Symbol(const string &name, SymbolType type, bool declared) {
         this->type = type;
         this->declared = declared;
         this->alloc = nullptr;
+        this->func = nullptr;
 }
 
 Symbol::~Symbol() {
@@ -64,4 +65,12 @@ llvm::AllocaInst *Symbol::getAlloc() const {
 
 void Symbol::setAlloc(llvm::AllocaInst *alloc) {
     Symbol::alloc = alloc;
+}
+
+Function *Symbol::getFunc() const {
+    return func;
+}
+
+void Symbol::setFunc(Function *func) {
+    Symbol::func = func;
 }

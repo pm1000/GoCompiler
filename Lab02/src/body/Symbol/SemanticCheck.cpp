@@ -90,6 +90,12 @@ void SemanticCheck::createScopeStructure(SymbolTree *sym, TreeNode *node) {
                     id = node->getFunctionID();
                     try {
                         sym->putSymbol(id, SYM_FUNCTION, true);
+
+                        node->setSymbolTreeNode(sym);
+                        auto kids = node->getChildren();
+                        for (int i = 0; i < kids.size(); ++i) {
+                            kids[i]->setSymbolTreeNode(sym);
+                        }
                     } catch (std::exception& e) {
                         std::cerr << e.what() << endl;
                     }

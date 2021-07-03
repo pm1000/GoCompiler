@@ -26,6 +26,7 @@ public:
     TreeNode(Type type, string value);
     TreeNode(Type type, double number);
     TreeNode(Type type);
+    TreeNode(Type type, int expID);
     virtual ~TreeNode();
 
     void addChild(TreeNode* node);
@@ -51,6 +52,7 @@ public:
     pair<TreeNode*,TreeNode*> getExpID_ID();
     TreeNode* getExpID();
     double getExpNum();
+    TreeNode* getExpFuncID();
 
     SymbolTree *getSymbolTreeNode() const;
     void setSymbolTreeNode(SymbolTree *symbolTreeNode);

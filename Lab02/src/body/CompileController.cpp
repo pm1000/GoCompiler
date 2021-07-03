@@ -112,6 +112,14 @@ void CompileController::astDFS(TreeNode *node, SymbolTree* symbolTree) {
                 //build function def
                 int pos = 0;
                 Function* func = buildFunc(node, children, &pos); // automatically inserted in the function by using the module operator
+
+                //save func in symbol tree for future function calls
+                Symbol* fSym = symbolTree->getDeclaredSymbol(node->getValue());
+                if (fSym == nullptr) {
+                    std::cerr << "Error, unused symbol" << endl;
+                }
+                //fSym->setFunc(func);
+
                 //after this scope needs to be opened
                 if (children[pos]->getType() == SCOPE) {
                     auto scopeKids = children[pos]->getChildren();
@@ -187,7 +195,6 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                     double value = children[*pos]->getExpNum();
                     SymbolTree* symNode = children[*pos]->getSymbolTreeNode();
 
-                    Value* id = symNode->getDeclaredSymbol(assignNode->getValue())->getValue();
                     Value* number = llvm::ConstantFP::get(context, llvm::APFloat(value));
 
                     //todo check if variable is already allocated
@@ -203,7 +210,7 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
 
                 } break;
 
-                /*
+
                 //id1 = id2 + number --> addition + zuweisung
                 case 1 : {
 
@@ -211,40 +218,112 @@ void CompileController::buildScope(TreeNode *parent, vector<TreeNode *> children
                     TreeNode* assign = children[*pos]->getAssignID(); //id1
                     pair<TreeNode*, double> p = children[*pos]->getExpID_Num(); //id2, number
 
-                    Value* id2 = symNode->getDeclaredSymbol(p.first->getValue())->getValue();
                     Value* number1 = llvm::ConstantFP::get(llvm::Type::getDoubleTy(context), p.second);
 
-                    llvm::BinaryOperator* add = llvm::BinaryOperator::Create(Instruction::Add, id2, number1, "AddInstruction");
+                    Symbol* id2 = symNode->getDeclaredSymbol(p.first->getValue());
+                    if (id2 == nullptr) {
+                        std::cerr << "Error, use of undeclared Symbol" << endl;
+                        exit(1);
+                    }
+
+                    llvm::BinaryOperator* add = llvm::BinaryOperator::Create(Instruction::Add, id2->getAlloc(), number1, "AddInstruction");
                     current->getInstList().push_back(add);
 
+                    Symbol* id1 = symNode->getDeclaredSymbol(assign->getValue());
+                    if (id2 == nullptr) {
+                        std::cerr << "Error, use of undeclared Symbol" << endl;
+                        exit(1);
+                    }
 
-                    Value* id1 = symNode->getDeclaredSymbol(assign->getValue())->getValue();
-                    //id1 = add;
-                    //llvm::Instruction* a = new llvm::StoreInst(add,id1,current);
+                    llvm::Instruction* store = new llvm::StoreInst(add,id1->getValue(),current);
 
                 } break;
 
+
                 //id = number + id --> addition + zuweisung
                 case 2 : {
+                    SymbolTree* symNode = children[*pos]->getSymbolTreeNode();
+                    TreeNode* assign = children[*pos]->getAssignID(); //id1
+                    pair<double, TreeNode*> p = children[*pos]->getExpNum_ID(); //id2, number
 
+                    Value* number1 = llvm::ConstantFP::get(llvm::Type::getDoubleTy(context), p.first);
+
+                    Symbol* id2 = symNode->getDeclaredSymbol(p.second->getValue());
+                    if (id2 == nullptr) {
+                        std::cerr << "Error, use of undeclared Symbol" << endl;
+                        exit(1);
+                    }
+
+                    llvm::BinaryOperator* add = llvm::BinaryOperator::Create(Instruction::Add, id2->getAlloc(), number1, "AddInstruction");
+                    current->getInstList().push_back(add);
+
+                    Symbol* id1 = symNode->getDeclaredSymbol(assign->getValue());
+                    if (id2 == nullptr) {
+                        std::cerr << "Error, use of undeclared Symbol" << endl;
+                        exit(1);
+                    }
+
+                    llvm::Instruction* store = new llvm::StoreInst(add,id1->getValue(),current);
                 } break;
 
                 //id = number --> zuweisung
                 case 3 : {
+                    TreeNode* assignNode = children[*pos]->getAssignID();
+                    double value = children[*pos]->getExpNum();
+                    SymbolTree* symNode = children[*pos]->getSymbolTreeNode();
 
+                    Value* number = llvm::ConstantFP::get(context, llvm::APFloat(value));
 
+                    Symbol* symbol = symNode->getDeclaredSymbol(assignNode->getValue());
+                    if (symbol == nullptr) {
+                        std::cerr << "Error, use of undeclared symbol" << endl;
+                        exit(1);
+                    }
+
+                    llvm::Instruction* assign = new llvm::StoreInst(number, symbol->getAlloc(), current);
 
                 } break;
 
                 //id = id --> zuweisung
                 case 4 : {
+                    TreeNode* assignNode = children[*pos]->getAssignID();
+                    TreeNode* assignValue = children[*pos]->getExpID();
+                    SymbolTree* symNode = children[*pos]->getSymbolTreeNode();
+
+                    Symbol* assignSym = symNode->getDeclaredSymbol(assignNode->getValue());
+                    Symbol* assignedVal = symNode->getDeclaredSymbol(assignValue->getValue());
+                    if (assignSym == nullptr || assignedVal == nullptr) {
+                        std::cerr << "Error, use of undeclared symbol" << endl;
+                        exit(1);
+                    }
+                    llvm::Instruction* assign = new llvm::StoreInst(assignedVal->getAlloc(), assignSym->getAlloc(), current);
 
                 } break;
+
+                case 5 : {
+                    //todo function call
+                    /*
+                    TreeNode* funcID = children[*pos]->getExpFuncID();
+                    SymbolTree* symNode = children[*pos]->getSymbolTreeNode();
+
+                    Symbol* func = symNode->getDeclaredSymbol(funcID->getValue());
+                    if (func == nullptr) {
+                        std::cerr << "Error, use of undeclared symbol" << endl;
+                        exit(1);
+                    }
+
+                    std::vector<Value*> emptyArgs;
+                    //auto funcCall = llvm::CallInst::Create(func->getValue(), makeArrayRef(emptyArgs));
+                    llvm::Instruction* fCall = llvm::CallInst::Create( func->getFunc(), emptyArgs, "call", current);
+                     */
+                } break;
+
+
                 default: {
                     std::cerr << "Wenn du das hier siehst, ist etwas grundlegend falsch gelaufen. Denke bitte nochmal drüber"
                             " nach, ob Informatik das richtige für dich ist!"<< endl;
                     exit(1);
-                } */
+                }
             }
         }
 

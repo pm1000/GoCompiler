@@ -112,14 +112,14 @@ EXPRESSIONS : EXPRESSION EXPRESSIONS {TreeNode* node = new TreeNode(EXPRESSION);
                   $$ = node;}
     | %empty {};
 
-EXPRESSION : "var" "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION);
+EXPRESSION : "var" "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION, 0);
                                       node->addChild(new TreeNode(VAR));
                                       node->addChild(new TreeNode(ID, $2));
                                       node->addChild(new TreeNode(ASSIGN));
                                       node->addChild(new TreeNode(NUMBER, $4));
                                       $$ = node;
                                       }
-    | "id" "=" "id" "+" "number" {TreeNode* node = new TreeNode(EXPRESSION);
+    | "id" "=" "id" "+" "number" {TreeNode* node = new TreeNode(EXPRESSION, 1);
                                   node->addChild(new TreeNode(ID, $1));
                                   node->addChild(new TreeNode(ASSIGN));
                                   node->addChild(new TreeNode(ID, $3));
@@ -127,7 +127,7 @@ EXPRESSION : "var" "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION);
                                   node->addChild(new TreeNode(NUMBER, $5));
                                   $$ = node;
                                   }
-    | "id" "=" "number" "+" "id" {TreeNode* node = new TreeNode(EXPRESSION);
+    | "id" "=" "number" "+" "id" {TreeNode* node = new TreeNode(EXPRESSION, 2);
                                   node->addChild(new TreeNode(ID, $1));
                                   node->addChild(new TreeNode(ASSIGN));
                                   node->addChild(new TreeNode(NUMBER, $3));
@@ -135,19 +135,19 @@ EXPRESSION : "var" "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION);
                                   node->addChild(new TreeNode(ID, $5));
                                   $$ = node;
                                   }
-    | "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION);
+    | "id" "=" "number" {TreeNode* node = new TreeNode(EXPRESSION, 3);
                          node->addChild(new TreeNode(ID, $1));
                          node->addChild(new TreeNode(ASSIGN));
                          node->addChild(new TreeNode(NUMBER, $3));
                          $$ = node;
                          }
-    | "id" "=" "id" {TreeNode* node = new TreeNode(EXPRESSION);
+    | "id" "=" "id" {TreeNode* node = new TreeNode(EXPRESSION, 4);
                      node->addChild(new TreeNode(ID, $1));
                      node->addChild(new TreeNode(ASSIGN));
                      node->addChild(new TreeNode(ID, $3));
                      $$ = node;
                      }
-    | "id" "(" ")" {TreeNode* node = new TreeNode(EXPRESSION);
+    | "id" "(" ")" {TreeNode* node = new TreeNode(EXPRESSION, 5);
                     node->addChild(new TreeNode(ID, $1));
                     node->addChild(new TreeNode(LPAREN));
                     node->addChild(new TreeNode(RPAREN));
