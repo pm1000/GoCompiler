@@ -33,6 +33,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Type.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/IR/ValueHandle.h"
 
 #include <string>
 #include <iostream>
@@ -46,6 +47,8 @@ using llvm::Module;
 using llvm::LLVMContext;
 using llvm::BasicBlock;
 using llvm::Function;
+using llvm::Value;
+using llvm::Instruction;
 
 class CompileController {
 private:
@@ -55,7 +58,7 @@ private:
     SymbolTree* symbolTable = nullptr;
     Module* module;
     LLVMContext context;
-    void astDFS(TreeNode* node);
+    void astDFS(TreeNode* node, SymbolTree* symbolTree);
     Function* buildFunc(TreeNode* parent, vector<TreeNode*> children, int* pos);
     void buildScope(TreeNode* parent, vector<TreeNode*> children, int* pos, BasicBlock* current, Function* f);
 

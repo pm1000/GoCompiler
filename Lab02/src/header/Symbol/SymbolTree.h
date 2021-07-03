@@ -20,19 +20,22 @@ private:
     string scopeName;
     unordered_map<string,Symbol*> table;
     vector<SymbolTree*> children;
+    SymbolTree* parent;
 
 public:
-    SymbolTree(const string &scopeName);
+    SymbolTree(const string &scopeName, SymbolTree* parent);
     virtual ~SymbolTree();
 
     void putSymbol(string name, SymbolType type, bool declared);
     void addChild(SymbolTree* node);
     bool containsDeclared(string name);
 
-    vector<string> getAllUndelaredSymbol();
+    vector<string> getAllUndeclaredSymbol();
     const vector<SymbolTree *> &getChildren() const;
     const string &getScopeName() const;
     vector<string> getTableEntries() const;
+
+    Symbol* getDeclaredSymbol(string sym);
 };
 
 

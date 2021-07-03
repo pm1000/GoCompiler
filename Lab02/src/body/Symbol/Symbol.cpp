@@ -40,3 +40,15 @@ string Symbol::getType() const {
             return "ERROR! Type not defined.";
     }
 }
+
+Value *Symbol::getValue() const {
+    return val;
+}
+
+void Symbol::getVal(double value, LLVMContext context) {
+    this->val = llvm::ConstantFP::get(context, llvm::APFloat(value));
+}
+
+void Symbol::setVal(Value *value) {
+    this->val = value;
+}

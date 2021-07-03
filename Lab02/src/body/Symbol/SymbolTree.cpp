@@ -4,7 +4,10 @@
 
 #include "../../header/Symbol/SymbolTree.h"
 
-SymbolTree::SymbolTree(const string &scopeName) : scopeName(scopeName) {}
+SymbolTree::SymbolTree(const string &scopeName, SymbolTree *parent) {
+    this->scopeName = scopeName;
+    this->parent = parent;
+}
 
 SymbolTree::~SymbolTree() {
 
@@ -30,7 +33,7 @@ void SymbolTree::addChild(SymbolTree *node) {
     children.push_back(node);
 }
 
-vector<string> SymbolTree::getAllUndelaredSymbol() {
+vector<string> SymbolTree::getAllUndeclaredSymbol() {
     vector<string> undec;
 
     for (auto it = table.begin(); it != table.end(); ++it){
@@ -75,4 +78,25 @@ vector<string> SymbolTree::getTableEntries() const {
         rows.push_back(symbol.second->toString());
     }
     return rows;
+}
+
+Symbol *SymbolTree::getDeclaredSymbol(string sym) {
+
+    //find symbol in table
+    auto it = table.find(sym);
+
+    //check if it is available
+    if (it != table.end()) {
+        //check if it is declared (if yes then return the symbol)
+        if (it->second->isDeclared())
+            return it->second;
+    }
+
+    //recursive call to this function with parent node
+    if (parent != nullptr) {
+        return parent->getDeclaredSymbol(sym);
+    } else {
+        //symbol not in this symbol table
+        return nullptr;
+    }
 }
