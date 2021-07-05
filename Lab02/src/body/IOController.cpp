@@ -16,10 +16,10 @@ void IOController::start() {
 
     // tmp!
     std::vector<string> fileNames;
-    fileNames.push_back(inputDirectory + "correct4.go");
-    /*fileNames.push_back(inputDirectory + "correct1.go");
+    //fileNames.push_back(inputDirectory + "correct4.go");
+    //fileNames.push_back(inputDirectory + "correct1.go");
     fileNames.push_back(inputDirectory + "correct2.go");
-    fileNames.push_back(inputDirectory + "correct3.go");
+    /*fileNames.push_back(inputDirectory + "correct3.go");
     fileNames.push_back(inputDirectory + "correct4.go");
     fileNames.push_back(inputDirectory + "incorrect1.go");
     fileNames.push_back(inputDirectory + "incorrect2.go");
